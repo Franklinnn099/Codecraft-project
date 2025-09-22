@@ -1134,7 +1134,7 @@ export default function Homepage() {
                   {" "}
                   24-Hour Design Consultation
                 </span>{" "}
-                worth $200!
+                worth GHC 3,200!
               </p>
 
               {/* Benefits list */}

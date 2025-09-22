@@ -27,6 +27,28 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import { supabase } from "../supabase/supabaseClient";
 
+// Helper function to send email notification
+const sendInquiryNotification = async (inquiryData, inquiryType) => {
+  try {
+    const { data, error } = await supabase.functions.invoke('send-inquiry-notification', {
+      body: {
+        inquiryData,
+        inquiryType
+      }
+    });
+
+    if (error) {
+      console.error('Failed to send email notification:', error);
+      // Don't throw error - email failure shouldn't block the inquiry submission
+    } else {
+      console.log('Email notification sent successfully:', data);
+    }
+  } catch (error) {
+    console.error('Error sending email notification:', error);
+    // Don't throw error - email failure shouldn't block the inquiry submission
+  }
+};
+
 export default function ProductInquiry() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -152,6 +174,9 @@ export default function ProductInquiry() {
 
         console.log("Service inquiry submitted successfully:", data);
 
+        // Send email notification to company
+        await sendInquiryNotification(serviceInquiryData, 'service');
+
         // Show success message
         setIsSubmitted(true);
 
@@ -196,6 +221,9 @@ export default function ProductInquiry() {
         }
 
         console.log("Product inquiry submitted successfully:", data);
+
+        // Send email notification to company
+        await sendInquiryNotification(inquiryData, 'product');
 
         // Show success message
         setIsSubmitted(true);
