@@ -257,16 +257,9 @@ export default function Sidebar({ collapsed, onToggle }) {
             <div className="relative">
               <img
                 src="/pics/Company logo.png"
-                alt="Expert Office Furnish Logo"
+                alt="Logo"
                 className="h-10 w-10 object-cover rounded-xl shadow-lg"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.nextElementSibling.style.display = 'flex';
-                }}
               />
-              <div className="h-10 w-10 bg-gradient-to-r from-green-600 to-yellow-600 rounded-xl shadow-lg items-center justify-center text-white font-bold text-sm hidden">
-                EOF
-              </div>
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-yellow-400 rounded-full animate-pulse"></div>
             </div>
             <div className="flex flex-col">
@@ -282,16 +275,9 @@ export default function Sidebar({ collapsed, onToggle }) {
           <div className="relative">
             <img
               src="/pics/Company logo.png"
-              alt="Expert Office Furnish Logo"
+              alt="Logo"
               className="h-10 w-10 object-cover rounded-xl shadow-lg"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextElementSibling.style.display = 'flex';
-              }}
             />
-            <div className="h-10 w-10 bg-gradient-to-r from-green-600 to-yellow-600 rounded-xl shadow-lg items-center justify-center text-white font-bold text-sm hidden">
-              EOF
-            </div>
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-yellow-400 rounded-full animate-pulse"></div>
           </div>
         )}

@@ -96,7 +96,7 @@ export default function LoginPage() {
 
           setTimeout(() => {
             // Pass tokens as URL parameters for auto-login
-            const adminUrl = `https://admin.expertofficefurnish.works/?access_token=${encodeURIComponent(
+            const adminUrl = `http://localhost:5000/?access_token=${encodeURIComponent(
               accessToken
             )}&refresh_token=${encodeURIComponent(
               refreshToken
@@ -170,7 +170,7 @@ export default function LoginPage() {
             const refreshToken = sessionData?.session?.refresh_token;
 
             setTimeout(() => {
-              const adminUrl = `https://admin.expertofficefurnish.works/?access_token=${encodeURIComponent(
+              const adminUrl = `http://localhost:5000/?access_token=${encodeURIComponent(
                 accessToken
               )}&refresh_token=${encodeURIComponent(
                 refreshToken

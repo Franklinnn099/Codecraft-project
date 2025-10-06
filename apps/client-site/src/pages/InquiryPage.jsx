@@ -150,6 +150,23 @@ export default function ProductInquiry() {
           return;
         }
 
+        // Send email notification to company
+        try {
+          await fetch("/functions/v1/send-inquiry-notification", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              inquiryData: serviceInquiryData,
+              inquiryType: "service",
+            }),
+          });
+        } catch (emailError) {
+          console.error(
+            "Failed to send service inquiry email notification:",
+            emailError
+          );
+        }
+
         console.log("Service inquiry submitted successfully:", data);
 
         // Show success message
@@ -193,6 +210,20 @@ export default function ProductInquiry() {
           setSubmitError("Failed to submit inquiry. Please try again.");
           setIsLoading(false);
           return;
+        }
+
+        // Send email notification to company
+        try {
+          await fetch("/functions/v1/send-inquiry-notification", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ inquiryData, inquiryType: "product" }),
+          });
+        } catch (emailError) {
+          console.error(
+            "Failed to send product inquiry email notification:",
+            emailError
+          );
         }
 
         console.log("Product inquiry submitted successfully:", data);

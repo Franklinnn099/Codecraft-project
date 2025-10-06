@@ -853,17 +853,14 @@ Your trusted partner for premium office furniture solutions.`,
                 <div className="flex items-center gap-4">
                   <div className="bg-white rounded-lg p-2 shadow-sm">
                     <img
-                      src="/pics/Company logo.png"
+                      src="../../pics/Company logo.png"
                       alt="Expert Office Furnish"
                       className="h-10 w-auto"
                       onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextElementSibling.style.display = 'flex';
+                        e.target.src =
+                          "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%234F46E5'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='16' font-weight='bold'%3EEOF%3C/text%3E%3C/svg%3E";
                       }}
                     />
-                    <div className="h-10 w-10 bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg items-center justify-center text-white font-bold text-sm hidden">
-                      EOF
-                    </div>
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold">
@@ -1099,17 +1096,14 @@ Follow us on social media for the latest updates and design inspiration!"
                     <div className="flex items-center gap-3">
                       <div className="bg-white rounded p-1">
                         <img
-                          src="/pics/Company logo.png"
+                          src="../../pics/Company logo.png"
                           alt="Expert Office Furnish"
                           className="h-8 w-auto"
                           onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextElementSibling.style.display = 'flex';
+                            e.target.src =
+                              "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%234F46E5'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='12' font-weight='bold'%3EEOF%3C/text%3E%3C/svg%3E";
                           }}
                         />
-                        <div className="h-8 w-8 bg-gradient-to-r from-blue-600 to-blue-800 rounded items-center justify-center text-white font-bold text-xs hidden">
-                          EOF
-                        </div>
                       </div>
                       <div>
                         <h3 className="font-bold text-lg">
