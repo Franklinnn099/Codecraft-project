@@ -54,7 +54,7 @@ const RelatedProducts = memo(
       try {
         setLoading(true);
         // Don't clear products immediately to prevent flickering
-        let query = supabase.from("products").select("*");
+        let query = supabase.from("products").select("id, name, description, image_url, category_id, subcategory_id, stock_quantity, created_at, status, additional_images");
 
         console.log(`🎯 Using algorithm: ${algorithm}`);
 
@@ -159,7 +159,7 @@ const RelatedProducts = memo(
                 const { data: recentProducts, error: recentError } =
                   await supabase
                     .from("products")
-                    .select("*")
+                    .select("id, name, description, image_url, category_id, subcategory_id, stock_quantity, created_at, status, additional_images")
                     .in("id", recentIds);
 
                 if (
@@ -270,13 +270,11 @@ const RelatedProducts = memo(
           console.log(
             `🔄 No products found for ${algorithm}, trying fallback...`
           );
-          const { data: fallbackData, error: fallbackError } = await supabase
-            .from("products")
-            .select("*")
-            .order("created_at", { ascending: false })
-            .limit(limit);
-
-          if (!fallbackError && fallbackData) {
+            const { data: fallbackData, error: fallbackError } = await supabase
+              .from("products")
+              .select("id, name, description, image_url, category_id, subcategory_id, stock_quantity, created_at, status, additional_images")
+              .order("created_at", { ascending: false })
+              .limit(limit);          if (!fallbackError && fallbackData) {
             console.log(
               `✅ Fallback returned:`,
               fallbackData.length,

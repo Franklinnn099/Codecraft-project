@@ -408,48 +408,24 @@ export default function Homepage() {
     : products;
 
   return (
-    <div className="bg-white text-gray-900 overflow-hidden relative">
+    <div className="bg-gray-50 text-gray-900 overflow-x-hidden selection:bg-yellow-500 selection:text-white">
       {/* Header Component */}
       <Header />
 
-      {/* Floating Interactive Elements */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div
-          className="absolute w-4 h-4 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full shadow-lg animate-pulse opacity-70"
-          style={{
-            left: `${Math.sin(scrollY * 0.001) * 100 + 100}px`,
-            top: `${Math.cos(scrollY * 0.001) * 50 + 200}px`,
-          }}
-        ></div>
-        <div
-          className="absolute w-6 h-6 bg-gradient-to-r from-green-500 to-blue-500 rounded-full shadow-lg animate-bounce opacity-50"
-          style={{
-            right: `${Math.sin(scrollY * 0.002) * 80 + 150}px`,
-            top: `${Math.cos(scrollY * 0.002) * 60 + 300}px`,
-          }}
-        ></div>
-        <div
-          className="absolute w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-ping opacity-60"
-          style={{
-            left: `${mousePosition.x * 0.05}px`,
-            top: `${mousePosition.y * 0.05 + 100}px`,
-          }}
-        ></div>
-      </div>
-
       {/* Smart Newsletter Popup */}
       {showSmartPopup && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl transform animate-pulse">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Gift className="w-8 h-8 text-white" />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl transform transition-all scale-100 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-yellow-400 to-orange-500"></div>
+            <div className="text-center relative z-10">
+              <div className="w-20 h-20 bg-yellow-50 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
+                <Gift className="w-10 h-10 text-yellow-500" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Wait! Don't Miss Out! 🎉
+              <h3 className="text-3xl font-bold text-gray-900 mb-3">
+                Wait! Don't Miss Out!
               </h3>
-              <p className="text-gray-600 mb-6">
-                You've been browsing for a while! Get <strong>15% OFF</strong>{" "}
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                You've been browsing for a while! Get <strong className="text-yellow-600">15% OFF</strong>{" "}
                 your first order + free shipping + early access to new
                 collections!
               </p>
@@ -458,28 +434,28 @@ export default function Homepage() {
                   type="email"
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}
-                  placeholder="Enter your email for exclusive deals"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  placeholder="Enter your email address"
+                  className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none transition-all"
                 />
                 <button
                   onClick={() =>
                     handleNewsletterSubscribe(newsletterEmail, "popup")
                   }
-                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300"
                 >
                   Claim My 15% Discount
                 </button>
                 <button
                   onClick={() => setShowSmartPopup(false)}
-                  className="text-gray-500 text-sm hover:text-gray-700"
+                  className="text-gray-400 text-sm hover:text-gray-600 transition-colors"
                 >
-                  No thanks, I'll pay full price
+                  No thanks, I'm not interested
                 </button>
               </div>
             </div>
             <button
               onClick={() => setShowSmartPopup(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
@@ -487,137 +463,93 @@ export default function Homepage() {
         </div>
       )}
 
-      {/* Enhanced Hero Section */}
+      {/* Creative Hero Section */}
       <section
         ref={heroRef}
         data-section="hero"
-        className="relative h-screen bg-cover bg-center overflow-hidden"
-        style={{
-          backgroundImage: `url(${heroImage})`,
-          transform: `translateY(${scrollY * 0.3}px)`,
-        }}
+        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-900 py-20"
       >
-        {/* Dynamic Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/90 via-green-900/50 to-black/80 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-500/20 to-transparent animate-pulse"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,215,0,0.1),transparent_70%)]"></div>
+        {/* Animated Background */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src={heroImage}
+            alt="Modern Office"
+            className="w-full h-full object-cover opacity-30 scale-105 animate-slow-zoom"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 via-gray-900/60 to-gray-900"></div>
+          
+          {/* Animated Blobs */}
+          <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-green-600/20 rounded-full blur-[120px] animate-pulse mix-blend-screen"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-yellow-500/20 rounded-full blur-[120px] animate-pulse delay-1000 mix-blend-screen"></div>
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 flex flex-col justify-center h-full px-6 sm:px-16">
-          <div
-            className={`transform transition-all duration-1000 ${
-              visibleSections.hero
-                ? "translate-y-0 opacity-100"
-                : "translate-y-10 opacity-0"
-            }`}
-          >
-            {/* Announcement Banner */}
-            <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-500/30 to-orange-500/30 rounded-full mb-8 backdrop-blur-sm border border-yellow-500/50 shadow-lg">
-              <Zap className="w-5 h-5 text-yellow-400 mr-3 animate-pulse" />
-              <span className="text-white font-medium">
-                🔥 Limited Time: Free Delivery on Orders Above $500!
-              </span>
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
+          <div className={`transition-all duration-1000 ${visibleSections.hero ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="inline-flex items-center px-6 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-yellow-400 mb-10 hover:bg-white/10 transition-colors cursor-default">
+              <Sparkles className="w-4 h-4 mr-2 animate-pulse" />
+              <span className="text-sm font-medium tracking-wider uppercase">Premium Office Solutions</span>
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-extrabold text-white max-w-5xl leading-tight mb-8 drop-shadow-2xl">
-              Transform Your
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 animate-pulse">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-8 tracking-tight leading-tight">
+              Transform Your <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-yellow-400 to-orange-400 animate-gradient-x">
                 Workspace
               </span>
-              Into Excellence
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mb-10 leading-relaxed">
-              Premium ergonomic furniture designed for health, productivity, and
-              modern aesthetics. Join{" "}
-              <strong>1,250+ satisfied customers</strong> who transformed their
-              offices with us.
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-12 leading-relaxed font-light">
+              Premium ergonomic furniture designed for health, productivity, and modern aesthetics. 
+              Join <span className="text-white font-semibold">1,250+ satisfied customers</span> who transformed their offices with us.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6 mb-8">
-              <Link to="/shop">
-                <button className="group bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-black px-10 py-5 rounded-2xl font-bold shadow-2xl hover:shadow-yellow-500/25 transform hover:scale-105 transition-all duration-300 flex items-center justify-center text-lg">
-                  <ShoppingCart className="mr-3 w-6 h-6" />
-                  Shop Premium Collection
-                  <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform" />
-                </button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Link
+                to="/shop"
+                className="group relative px-10 py-5 bg-gradient-to-r from-green-500 to-yellow-500 rounded-full text-white font-bold text-lg shadow-lg hover:shadow-green-500/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+              >
+                <span className="relative z-10 flex items-center">
+                  Shop Collection <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 to-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
 
               <button
                 onClick={() => setShowVideoModal(true)}
-                className="group border-2 border-white/80 text-white px-10 py-5 rounded-2xl font-bold hover:bg-white hover:text-black transform hover:scale-105 transition-all duration-300 flex items-center justify-center text-lg backdrop-blur-sm"
+                className="group px-10 py-5 bg-white/5 backdrop-blur-md border border-white/10 rounded-full text-white font-semibold text-lg hover:bg-white/10 transition-all duration-300 flex items-center hover:-translate-y-1"
               >
-                <Play className="mr-3 w-6 h-6 group-hover:text-yellow-500" />
-                Watch Our Story
-                <Sparkles className="ml-3 w-6 h-6 group-hover:rotate-12 transition-transform" />
+                <Play className="w-5 h-5 mr-3 fill-current group-hover:text-yellow-400 transition-colors" />
+                Watch Story
               </button>
-            </div>
-
-            {/* Quick Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-yellow-400">1,250+</div>
-                <div className="text-sm text-gray-300">Happy Customers</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-yellow-400">500+</div>
-                <div className="text-sm text-gray-300">Products</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-yellow-400">4.9★</div>
-                <div className="text-sm text-gray-300">Average Rating</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-yellow-400">15+</div>
-                <div className="text-sm text-gray-300">Years Experience</div>
-              </div>
             </div>
           </div>
         </div>
 
-        {/* Animated Scroll Indicator */}
-        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2">
-          <div className="flex flex-col items-center space-y-3">
-            <div className="text-white text-sm font-medium animate-bounce">
-              Scroll to explore
-            </div>
-            <div className="w-8 h-12 border-2 border-white/50 rounded-full flex justify-center relative">
-              <div className="w-1 h-3 bg-white rounded-full mt-3 animate-ping"></div>
-            </div>
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-white/30">
+          <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center p-1">
+            <div className="w-1 h-2 bg-white/50 rounded-full animate-scroll"></div>
           </div>
         </div>
       </section>
 
-      {/* Enhanced Features Section */}
+      {/* Features Section (Why Choose Us) */}
       <section
         ref={commitmentRef}
         data-section="commitments"
-        className="py-24 bg-gradient-to-br from-gray-50 via-white to-gray-100 relative overflow-hidden"
+        className="py-32 bg-gray-50 relative overflow-hidden"
       >
-        <div className="relative z-10 max-w-7xl mx-auto px-6">
-          <div
-            className={`text-center mb-20 transform transition-all duration-1000 delay-200 ${
-              visibleSections.commitments
-                ? "translate-y-0 opacity-100"
-                : "translate-y-20 opacity-0"
-            }`}
-          >
-            <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-full mb-6">
-              <Award className="w-5 h-5 text-yellow-600 mr-2" />
-              <span className="text-yellow-700 font-semibold">
-                Why Choose Expert Office Furnish
-              </span>
-            </div>
-            <h2 className="text-5xl md:text-6xl font-extrabold mb-6 text-gray-900">
-              Experience The
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 via-orange-500 to-red-500">
-                Difference
-              </span>
+        {/* Decorative Elements */}
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-gray-100 to-transparent pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-yellow-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className={`text-center mb-20 transition-all duration-1000 ${visibleSections.commitments ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 tracking-tight">
+              Experience The <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-yellow-600">Difference</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Join thousands of satisfied customers who've transformed their
-              workspaces
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Join thousands of satisfied customers who've transformed their workspaces with our premium solutions.
             </p>
           </div>
 
@@ -625,190 +557,56 @@ export default function Homepage() {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className={`group transform transition-all duration-1000 ${
-                  visibleSections.commitments
-                    ? "translate-y-0 opacity-100"
-                    : "translate-y-20 opacity-0"
-                }`}
-                style={{ transitionDelay: `${300 + index * 100}ms` }}
+                className={`group relative p-8 bg-white rounded-[2rem] shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 ${visibleSections.commitments ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <div className="relative p-8 bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 group-hover:border-gray-200 h-full">
-                  <div
-                    className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    {feature.icon}
-                  </div>
-
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-gray-700 transition-colors">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {feature.description}
-                  </p>
-
-                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-orange-500/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center text-white mb-8 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                  {feature.icon}
                 </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed mb-6">{feature.description}</p>
+                
+                <div className="absolute bottom-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-gray-100 to-transparent group-hover:via-yellow-400 transition-all duration-500"></div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Animated Stats Section */}
+      {/* Modern Stats Section */}
       <section
         ref={statsRef}
         data-section="stats"
-        className="py-20 bg-gradient-to-r from-gray-900 via-black to-gray-900 relative overflow-hidden"
+        className="py-24 bg-gray-900 text-white relative overflow-hidden"
       >
-        <div className="relative z-10 max-w-6xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div
-              className={`text-center transform transition-all duration-1000 ${
-                visibleSections.stats
-                  ? "translate-y-0 opacity-100"
-                  : "translate-y-20 opacity-0"
-              }`}
-            >
-              <div className="text-4xl md:text-5xl font-bold text-yellow-400 mb-2 font-mono">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-green-900/20 to-yellow-900/20"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+            <div className={`transition-all duration-1000 ${visibleSections.stats ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
+              <div className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-yellow-300 to-yellow-600 mb-2 font-mono">
                 {Math.floor(stats.customers).toLocaleString()}+
               </div>
-              <div className="text-gray-300 font-medium">Happy Customers</div>
-              <div className="text-sm text-gray-500 mt-1">Worldwide</div>
+              <div className="text-gray-400 font-medium tracking-wide uppercase text-sm">Happy Customers</div>
             </div>
-            <div
-              className={`text-center transform transition-all duration-1000 delay-100 ${
-                visibleSections.stats
-                  ? "translate-y-0 opacity-100"
-                  : "translate-y-20 opacity-0"
-              }`}
-            >
-              <div className="text-4xl md:text-5xl font-bold text-green-400 mb-2 font-mono">
+            <div className={`transition-all duration-1000 delay-100 ${visibleSections.stats ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
+              <div className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-green-300 to-green-600 mb-2 font-mono">
                 {Math.floor(stats.products)}+
               </div>
-              <div className="text-gray-300 font-medium">Premium Products</div>
-              <div className="text-sm text-gray-500 mt-1">In Stock</div>
+              <div className="text-gray-400 font-medium tracking-wide uppercase text-sm">Premium Products</div>
             </div>
-            <div
-              className={`text-center transform transition-all duration-1000 delay-200 ${
-                visibleSections.stats
-                  ? "translate-y-0 opacity-100"
-                  : "translate-y-20 opacity-0"
-              }`}
-            >
-              <div className="text-4xl md:text-5xl font-bold text-blue-400 mb-2 font-mono">
+            <div className={`transition-all duration-1000 delay-200 ${visibleSections.stats ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
+              <div className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-blue-300 to-blue-600 mb-2 font-mono">
                 {stats.reviews.toFixed(1)}★
               </div>
-              <div className="text-gray-300 font-medium">Average Rating</div>
-              <div className="text-sm text-gray-500 mt-1">From Reviews</div>
+              <div className="text-gray-400 font-medium tracking-wide uppercase text-sm">Average Rating</div>
             </div>
-            <div
-              className={`text-center transform transition-all duration-1000 delay-300 ${
-                visibleSections.stats
-                  ? "translate-y-0 opacity-100"
-                  : "translate-y-20 opacity-0"
-              }`}
-            >
-              <div className="text-4xl md:text-5xl font-bold text-purple-400 mb-2 font-mono">
+            <div className={`transition-all duration-1000 delay-300 ${visibleSections.stats ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
+              <div className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-purple-300 to-purple-600 mb-2 font-mono">
                 {Math.floor(stats.yearsExperience)}+
               </div>
-              <div className="text-gray-300 font-medium">Years Experience</div>
-              <div className="text-sm text-gray-500 mt-1">In Business</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Interactive Testimonials Section */}
-      <section
-        ref={testimonialsRef}
-        data-section="testimonials"
-        className="py-24 bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-50 relative overflow-hidden"
-      >
-        <div className="relative z-10 max-w-6xl mx-auto px-6">
-          <div
-            className={`text-center mb-16 transform transition-all duration-1000 ${
-              visibleSections.testimonials
-                ? "translate-y-0 opacity-100"
-                : "translate-y-20 opacity-0"
-            }`}
-          >
-            <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-full mb-6">
-              <Heart className="w-5 h-5 text-red-500 mr-2" />
-              <span className="text-gray-700 font-semibold">Customer Love</span>
-            </div>
-            <h2 className="text-5xl md:text-6xl font-extrabold mb-6 text-gray-900">
-              What Our Customers
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 via-orange-500 to-red-500">
-                Are Saying
-              </span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Real stories from real customers who transformed their workspaces
-            </p>
-          </div>
-
-          {/* Testimonial Carousel */}
-          <div className="relative">
-            <div className="overflow-hidden rounded-3xl">
-              <div
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{
-                  transform: `translateX(-${currentTestimonial * 100}%)`,
-                }}
-              >
-                {testimonials.map((testimonial, index) => (
-                  <div
-                    key={testimonial.id}
-                    className="w-full flex-shrink-0 px-4"
-                  >
-                    <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100 max-w-4xl mx-auto">
-                      <div className="text-center">
-                        <div className="flex justify-center mb-6">
-                          {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className="w-6 h-6 text-yellow-500 fill-current"
-                            />
-                          ))}
-                        </div>
-                        <blockquote className="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed italic">
-                          "{testimonial.content}"
-                        </blockquote>
-                        <div className="flex items-center justify-center space-x-4">
-                          <img
-                            src={testimonial.image}
-                            alt={testimonial.name}
-                            className="w-16 h-16 rounded-full border-4 border-yellow-200"
-                          />
-                          <div className="text-left">
-                            <div className="font-bold text-gray-900 text-lg">
-                              {testimonial.name}
-                            </div>
-                            <div className="text-gray-600">
-                              {testimonial.position}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Testimonial Navigation */}
-            <div className="flex justify-center mt-8 space-x-3">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentTestimonial
-                      ? "bg-yellow-500 scale-125"
-                      : "bg-gray-300 hover:bg-gray-400"
-                  }`}
-                />
-              ))}
+              <div className="text-gray-400 font-medium tracking-wide uppercase text-sm">Years Experience</div>
             </div>
           </div>
         </div>
@@ -818,97 +616,170 @@ export default function Homepage() {
       <section
         ref={productsRef}
         data-section="products"
-        className="py-24 bg-gradient-to-br from-gray-50 via-white to-gray-50 relative"
-        id="products"
+        className="py-32 bg-white relative"
       >
-        <div className="relative z-10">
-          <div
-            className={`text-center mb-16 transform transition-all duration-1000 ${
-              visibleSections.products
-                ? "translate-y-0 opacity-100"
-                : "translate-y-20 opacity-0"
-            }`}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Featured
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-yellow-600">
-                {" "}
-                Products
-              </span>
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              Discover our handpicked selection of premium office furniture
-            </p>
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+            <div className={`transition-all duration-1000 ${visibleSections.products ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Featured <span className="italic text-green-600 font-serif">Collection</span>
+              </h2>
+              <p className="text-gray-600 text-lg max-w-md">
+                Handpicked premium office furniture designed to elevate your workspace environment.
+              </p>
+            </div>
+            <Link 
+              to="/shop" 
+              className={`hidden md:flex items-center text-gray-900 font-bold hover:text-green-600 transition-colors group transition-all duration-1000 delay-200 ${visibleSections.products ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}
+            >
+              View All Products 
+              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center ml-3 group-hover:bg-green-100 transition-colors">
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </Link>
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-6 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
               {[...Array(4)].map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-2xl p-6 shadow-lg animate-pulse"
-                >
-                  <div className="bg-gray-300 h-48 rounded-xl mb-4"></div>
-                  <div className="bg-gray-300 h-4 rounded mb-2"></div>
-                  <div className="bg-gray-300 h-4 rounded w-2/3"></div>
-                </div>
+                <div key={i} className="bg-gray-100 rounded-3xl h-96 animate-pulse"></div>
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-6 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
               {filteredProducts.map((product, index) => (
                 <div
                   key={product.id}
-                  className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-gray-200 transform hover:scale-105 ${
-                    visibleSections.products
-                      ? "translate-y-0 opacity-100"
-                      : "translate-y-20 opacity-0"
-                  }`}
+                  className={`group relative bg-white rounded-[2rem] shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 ${visibleSections.products ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <div className="relative overflow-hidden">
+                  <div className="relative h-64 overflow-hidden rounded-t-[2rem]">
                     <img
                       src={product.image_url || "/api/placeholder/300/200"}
                       alt={product.name}
-                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div className="absolute top-4 right-4">
-                      <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                        In Stock
-                      </span>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-green-700 shadow-sm">
+                      In Stock
                     </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="font-bold text-lg mb-2 group-hover:text-green-600 transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                      {product.description}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 text-sm">
-                        Stock: {product.stock_quantity}
-                      </span>
+
+                    <div className="absolute bottom-4 left-4 right-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                       <Link to={`/product/${product.id}`}>
-                        <button className="bg-gradient-to-r from-green-500 to-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <button className="w-full bg-white text-gray-900 py-3 rounded-xl font-bold hover:bg-yellow-400 transition-colors shadow-lg">
                           View Details
                         </button>
                       </Link>
+                    </div>
+                  </div>
+                  
+                  <div className="p-6">
+                    <h3 className="font-bold text-xl text-gray-900 mb-2 group-hover:text-green-600 transition-colors line-clamp-1">
+                      {product.name}
+                    </h3>
+                    <p className="text-gray-500 text-sm mb-4 line-clamp-2 h-10">
+                      {product.description}
+                    </p>
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <span className="text-sm font-medium text-gray-400">
+                        {product.stock_quantity} units left
+                      </span>
+                      <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-green-50 transition-colors">
+                        <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-green-600" />
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           )}
+          
+          <div className="mt-12 text-center md:hidden">
+             <Link to="/shop" className="inline-flex items-center font-bold text-green-600">
+                View All Products <ArrowRight className="ml-2 w-5 h-5" />
+             </Link>
+          </div>
+        </div>
+      </section>
 
-          <div className="text-center mt-12">
-            <Link to="/shop">
-              <button className="bg-gradient-to-r from-green-600 to-yellow-600 hover:from-green-700 hover:to-yellow-700 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 inline-flex items-center">
-                Explore All Products
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </button>
-            </Link>
+      {/* Testimonials Section */}
+      <section
+        ref={testimonialsRef}
+        data-section="testimonials"
+        className="py-32 bg-gray-50 relative overflow-hidden"
+      >
+        {/* Background Decoration */}
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-96 bg-gradient-to-r from-yellow-500/5 via-orange-500/5 to-transparent -skew-y-3 pointer-events-none"></div>
+
+        <div className="relative z-10 max-w-6xl mx-auto px-6">
+          <div className={`text-center mb-20 transition-all duration-1000 ${visibleSections.testimonials ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-red-50 text-red-500 mb-6">
+              <Heart className="w-4 h-4 mr-2 fill-current" />
+              <span className="text-sm font-bold uppercase tracking-wider">Customer Love</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+              What Our Customers <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-red-500">Are Saying</span>
+            </h2>
+          </div>
+
+          <div className="relative">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-700 ease-out"
+                style={{ transform: `translateX(-${currentTestimonial * 100}%)` }}
+              >
+                {testimonials.map((testimonial) => (
+                  <div key={testimonial.id} className="w-full flex-shrink-0 px-4">
+                    <div className="bg-white rounded-[3rem] p-10 md:p-16 shadow-2xl max-w-4xl mx-auto text-center relative">
+                      <div className="absolute top-10 left-10 text-9xl text-gray-100 font-serif leading-none select-none">"</div>
+                      
+                      <div className="relative z-10">
+                        <div className="flex justify-center gap-1 mb-8">
+                          {[...Array(testimonial.rating)].map((_, i) => (
+                            <Star key={i} className="w-6 h-6 text-yellow-400 fill-current" />
+                          ))}
+                        </div>
+                        
+                        <blockquote className="text-2xl md:text-3xl text-gray-800 font-medium leading-relaxed mb-10">
+                          {testimonial.content}
+                        </blockquote>
+                        
+                        <div className="flex items-center justify-center gap-4">
+                          <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-yellow-400 p-1">
+                            <img
+                              src={testimonial.image}
+                              alt={testimonial.name}
+                              className="w-full h-full rounded-full object-cover bg-gray-200"
+                            />
+                          </div>
+                          <div className="text-left">
+                            <div className="font-bold text-gray-900 text-lg">{testimonial.name}</div>
+                            <div className="text-gray-500 text-sm">{testimonial.position}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Navigation Dots */}
+            <div className="flex justify-center mt-12 gap-3">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentTestimonial
+                      ? "bg-yellow-500 w-8"
+                      : "bg-gray-300 hover:bg-gray-400"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -917,41 +788,22 @@ export default function Homepage() {
       <section
         ref={blogRef}
         data-section="blog"
-        className="py-24 bg-gradient-to-br from-gray-100 via-gray-50 to-white"
+        className="py-32 bg-white"
       >
         <div className="max-w-7xl mx-auto px-6">
-          <div
-            className={`text-center mb-16 transform transition-all duration-1000 ${
-              visibleSections.blog
-                ? "translate-y-0 opacity-100"
-                : "translate-y-20 opacity-0"
-            }`}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Latest
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                {" "}
-                Insights
-              </span>
+          <div className={`text-center mb-20 transition-all duration-1000 ${visibleSections.blog ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Latest <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Insights</span>
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              Stay updated with the latest trends in office design and workspace
-              optimization
+            <p className="text-gray-600 text-lg">
+              Stay updated with the latest trends in office design
             </p>
           </div>
 
           {isBlogLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[...Array(3)].map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-2xl p-6 shadow-lg animate-pulse"
-                >
-                  <div className="bg-gray-300 h-48 rounded-xl mb-4"></div>
-                  <div className="bg-gray-300 h-4 rounded mb-2"></div>
-                  <div className="bg-gray-300 h-4 rounded w-2/3 mb-4"></div>
-                  <div className="bg-gray-300 h-3 rounded w-1/3"></div>
-                </div>
+                <div key={i} className="bg-gray-100 rounded-3xl h-96 animate-pulse"></div>
               ))}
             </div>
           ) : (
@@ -959,50 +811,43 @@ export default function Homepage() {
               {blogPosts.map((post, index) => (
                 <article
                   key={post.id}
-                  className={`group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-gray-200 transform hover:scale-105 ${
-                    visibleSections.blog
-                      ? "translate-y-0 opacity-100"
-                      : "translate-y-20 opacity-0"
-                  }`}
+                  className={`group bg-white rounded-[2rem] shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-gray-200 hover:-translate-y-2 ${visibleSections.blog ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <div className="relative overflow-hidden">
+                  <div className="relative h-64 overflow-hidden">
                     <img
                       src={post.image_url || "/api/placeholder/400/250"}
                       alt={post.title}
-                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center mb-3 text-sm text-gray-500">
-                      <Calendar className="w-4 h-4 mr-2" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-gray-800">
                       {new Date(post.created_at).toLocaleDateString()}
                     </div>
-                    <h3 className="font-bold text-xl mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
+                  </div>
+                  <div className="p-8">
+                    <h3 className="font-bold text-xl text-gray-900 mb-4 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
                       {post.title}
                     </h3>
-                    <p className="text-gray-600 mb-4 line-clamp-3">
+                    <p className="text-gray-600 mb-6 line-clamp-3 text-sm leading-relaxed">
                       {post.excerpt}
                     </p>
                     <Link
                       to={`/blog/${post.id}`}
-                      className="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold group-hover:translate-x-2 transition-transform duration-300"
+                      className="inline-flex items-center text-blue-600 font-bold group-hover:translate-x-2 transition-transform duration-300"
                     >
-                      Read More
-                      <ChevronRight className="w-4 h-4 ml-1" />
+                      Read Article <ChevronRight className="w-4 h-4 ml-1" />
                     </Link>
                   </div>
                 </article>
               ))}
             </div>
           )}
-
-          <div className="text-center mt-12">
+          
+          <div className="text-center mt-16">
             <Link to="/blog">
-              <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 inline-flex items-center">
-                Explore All Articles
-                <BookOpen className="ml-2 w-5 h-5" />
+              <button className="px-8 py-4 rounded-full border-2 border-gray-200 text-gray-900 font-bold hover:border-blue-600 hover:text-blue-600 transition-all duration-300">
+                View All Articles
               </button>
             </Link>
           </div>

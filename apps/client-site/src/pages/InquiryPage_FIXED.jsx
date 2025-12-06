@@ -327,9 +327,6 @@ export default function InquiryPage() {
                         <h4 className="font-medium text-gray-900 text-sm">
                           {item.name}
                         </h4>
-                        <p className="text-green-600 text-sm font-semibold">
-                          ${item.price}
-                        </p>
                       </div>
                     </div>
                   ))}

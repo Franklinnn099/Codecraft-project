@@ -57,34 +57,36 @@ export default function AdminProfile() {
       } = await supabase.auth.getUser();
       if (user) {
         setUser(user);
-        loadProfile(user.id);
+        loadProfile(user.email);
       }
     } catch (error) {
       setError("Failed to get current user");
     }
   };
 
-  const loadProfile = async (userId) => {
+  const loadProfile = async (email) => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from("users")
+        .from("admin_users")
         .select("*")
-        .eq("id", userId)
-        .single();
+        .eq("email", email.toLowerCase())
+        .maybeSingle();
 
       if (error) throw error;
 
+      // Map admin_users columns to profile state
+      // admin_users has: id, email, role, display_name, is_active, created_at, updated_at
       setProfile({
-        name: data.name || "",
-        email: data.email || user?.email || "",
-        phone: data.phone || "",
-        address: data.address || "",
-        city: data.city || "",
-        role: data.role || "",
-        avatar_url: data.avatar_url || "",
-        last_active: data.last_active || "",
-        created_at: data.created_at || "",
+        name: data?.display_name || "",
+        email: data?.email || user?.email || "",
+        phone: "", // Not in admin_users table
+        address: "", // Not in admin_users table
+        city: "", // Not in admin_users table
+        role: data?.role || "",
+        avatar_url: "", // Not in admin_users table
+        last_active: data?.updated_at || "",
+        created_at: data?.created_at || "",
       });
     } catch (error) {
       setError("Failed to load profile: " + error.message);
@@ -100,18 +102,14 @@ export default function AdminProfile() {
     setError("");
 
     try {
-      // Update user profile in database
+      // Update user profile in database (only fields that exist in admin_users)
       const { error: updateError } = await supabase
-        .from("users")
+        .from("admin_users")
         .update({
-          name: profile.name,
-          phone: profile.phone,
-          address: profile.address,
-          city: profile.city,
+          display_name: profile.name,
           updated_at: new Date().toISOString(),
-          last_active: new Date().toISOString(),
         })
-        .eq("id", user.id);
+        .eq("email", user.email.toLowerCase());
 
       if (updateError) throw updateError;
 

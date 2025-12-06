@@ -329,7 +329,7 @@ class UserBehaviorTracker {
       let query = supabase
         .from("products")
         .select(
-          "id, name, description, price, images, category_id, subcategory_id, stock_quantity"
+          "id, name, description, images, category_id, subcategory_id, stock_quantity"
         )
         .eq("is_active", true)
         .gt("stock_quantity", 0);

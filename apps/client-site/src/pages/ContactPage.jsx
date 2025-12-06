@@ -185,11 +185,11 @@ export default function ContactPage() {
                   <div className="p-2 bg-green-100 rounded-xl">
                     <Phone className="w-5 h-5 text-green-600" />
                   </div>
-                  <div>
+                  <div className="flex flex-col">
                     <p className="font-semibold text-gray-800">Call Us</p>
-                    <p className="text-green-600">+233 57 1386600</p>
-                    <p className="text-green-600">+233 24 4371593</p>
-                    <p className="text-green-600">+233 24 4280532</p>
+                    <a href="tel:0244371593" className="text-green-600 hover:underline md:pointer-events-none">0244371593</a>
+                    <a href="tel:0244280532" className="text-green-600 hover:underline md:pointer-events-none">0244280532</a>
+                    <a href="tel:0571386600" className="text-green-600 hover:underline md:pointer-events-none">0571386600</a>
                   </div>
                 </div>
 
@@ -199,12 +199,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-800">Email Us</p>
-                    <p className="text-yellow-600">
-                      sales@expertofficefurnish.com
-                    </p>
-                    <p className="text-yellow-600">
-                      expertofficefurnish@yahoo.com
-                    </p>
+                    <a href="mailto:expertofficefurnish@yahoo.com" className="text-yellow-600 hover:underline">expertofficefurnish@yahoo.com</a>
                   </div>
                 </div>
 
@@ -215,9 +210,7 @@ export default function ContactPage() {
                   <div>
                     <p className="font-semibold text-gray-800">Visit Us</p>
                     <p className="text-green-600">
-                      P.O.BOX WY 1253. Kwabenya-Accra. GPS Address: GE-231-4636
-                      <br />
-                      Atomic Hills Estate Road, Near ASI PLAZA
+                      Atomic Hills Estate St, Accra
                     </p>
                   </div>
                 </div>
@@ -452,9 +445,7 @@ export default function ContactPage() {
                     <p className="text-gray-600">
                       Expert Office Furnish
                       <br />
-                      P.O.BOX WY 1253. Kwabenya-Accra. GPS Address: GE-231-4636
-                      <br />
-                      Atomic Hills Estate Road, Near ASI PLAZA
+                      Atomic Hills Estate St, Accra
                     </p>
                   </div>
                 </div>
@@ -477,11 +468,16 @@ export default function ContactPage() {
               </div>
 
               <div className="mt-8">
-                <button className="group flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-yellow-600 text-white rounded-2xl font-semibold hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                <a 
+                  href="https://www.google.com/maps/dir//Atomic+Hills+Estate+St,+Accra/@5.6802412,-0.3141089,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0xfdf9f59f1bee637:0x4d77b3c520395c25!2m2!1d-0.2317069!2d5.680247?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-yellow-600 text-white rounded-2xl font-semibold hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                >
                   <MapPin className="w-5 h-5 mr-2" />
                   Get Directions
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </button>
+                </a>
               </div>
             </div>
 
@@ -498,8 +494,8 @@ export default function ContactPage() {
               </div>
               <div className="rounded-2xl overflow-hidden shadow-lg">
                 <iframe
-                  title="Expert Office Furnish Location - Kwabenya, Accra"
-                  src="https://www.google.com/maps?q=Kwabenya,+Accra,+Ghana&output=embed"
+                  title="Expert Office Furnish Location - Atomic Hills Estate St, Accra"
+                  src="https://www.google.com/maps?q=Atomic+Hills+Estate+St,+Accra&output=embed"
                   className="w-full h-80 border-0"
                   allowFullScreen
                   loading="lazy"
@@ -509,11 +505,10 @@ export default function ContactPage() {
               </div>
               <div className="mt-4 p-3 bg-green-50 rounded-xl">
                 <p className="text-sm text-green-700">
-                  <strong>📍 Address:</strong> P.O.BOX WY 1253. Kwabenya-Accra
+                  <strong>📍 Address:</strong> Atomic Hills Estate St, Accra
                 </p>
                 <p className="text-xs text-green-600 mt-1">
-                  <strong>GPS:</strong> GE-231-4636 | Click on the map to get
-                  directions
+                  Click on the map to get directions
                 </p>
               </div>
             </div>

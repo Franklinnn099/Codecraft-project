@@ -67,20 +67,21 @@ export default function Footer() {
 
                   {/* Contact Info */}
                   <div className="space-y-4">
-                    <div className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-300">
-                      <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
+                    <div className="flex items-start gap-3 text-gray-300 hover:text-white transition-colors duration-300">
+                      <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center mt-1">
                         <Phone className="w-5 h-5 text-green-400" />
                       </div>
-                      <span>+233 24 4371593</span>
-                      <span>+233 24 4280532</span>
-                      <span>+233 57 1386600</span>
+                      <div className="flex flex-col">
+                        <a href="tel:0244371593" className="hover:text-green-400 md:pointer-events-none">0244371593</a>
+                        <a href="tel:0244280532" className="hover:text-green-400 md:pointer-events-none">0244280532</a>
+                        <a href="tel:0571386600" className="hover:text-green-400 md:pointer-events-none">0571386600</a>
+                      </div>
                     </div>
                     <div className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-300">
                       <div className="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center">
                         <Mail className="w-5 h-5 text-yellow-400" />
                       </div>
-                      <span>sales@expertofficefurnish.com</span>
-                      <span>expertofficefurnish@yahoo.com</span>
+                      <a href="mailto:expertofficefurnish@yahoo.com" className="hover:text-yellow-400">expertofficefurnish@yahoo.com</a>
                     </div>
                     <div className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors duration-300">
                       <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">

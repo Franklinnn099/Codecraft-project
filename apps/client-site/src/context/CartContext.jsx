@@ -103,7 +103,7 @@ export const CartProvider = ({ children }) => {
 
     // Calculate total of applicable items
     const applicableTotal = applicableCartItems.reduce(
-      (sum, item) => sum + item.price * item.qty,
+      (sum, item) => sum + (item.price || 0) * item.qty,
       0
     );
 

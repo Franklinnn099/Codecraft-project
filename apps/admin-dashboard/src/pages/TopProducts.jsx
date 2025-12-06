@@ -24,6 +24,10 @@ import {
   CheckCircle,
   AlertTriangle,
 } from "lucide-react";
+import { exportToCSV } from "../utils/exportUtils";
+
+// Check for demo mode from environment
+const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true';
 
 export default function TopProducts() {
   const [topProducts, setTopProducts] = useState([]);
@@ -33,6 +37,7 @@ export default function TopProducts() {
   const [error, setError] = useState("");
   const [selectedPeriod, setSelectedPeriod] = useState("current");
   const [refreshing, setRefreshing] = useState(false);
+  const [isUsingMockData, setIsUsingMockData] = useState(false);
 
   useEffect(() => {
     fetchTopProducts();
@@ -41,134 +46,164 @@ export default function TopProducts() {
   const fetchTopProducts = async () => {
     setLoading(true);
     setError("");
+    setIsUsingMockData(false);
 
     try {
-      // Determine date range based on selected period
-      const now = new Date();
-      let startDate;
-
-      switch (selectedPeriod) {
-        case "current":
-          startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-          break;
-        case "last":
-          startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-          break;
-        case "quarter":
-          startDate = new Date(now.getFullYear(), now.getMonth() - 3, 1);
-          break;
-        default:
-          startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-      }
-
-      const targetMonth = startDate.toISOString().slice(0, 7) + "-01";
-
-      const { data: latestMonthData, error } = await supabase
-        .from("top_product_metrics")
-        .select(
-          `
-          product_id, 
-          revenue, 
-          performance_percent, 
-          rank, 
-          month, 
-          products(name, image_url, price, category_id)
-        `
-        )
-        .eq("month", targetMonth)
-        .order("rank", { ascending: true })
+      // Fetch from v_top_products view (real-time data)
+      const { data, error } = await supabase
+        .from("v_top_products")
+        .select("*")
         .limit(10);
 
       if (error) {
-        console.error("Error fetching top product metrics:", error);
-        setError("Failed to load top products: " + error.message);
-      } else {
-        if (latestMonthData && latestMonthData.length > 0) {
-          setTopProducts(latestMonthData);
-          const revenueSum = latestMonthData.reduce(
-            (sum, item) => sum + parseFloat(item.revenue || 0),
-            0
-          );
-          setTotalRevenue(revenueSum);
-          setGrowth(15); // You could calculate actual growth here
+        console.error("Error fetching top products:", error);
+        if (DEMO_MODE) {
+          setIsUsingMockData(true);
+          const mockData = generateMockData();
+          setTopProducts(mockData.products);
+          setTotalRevenue(mockData.totalRevenue);
+          setGrowth(mockData.growth);
         } else {
-          // Generate mock data if no data exists
-          const mockProducts = [
-            {
-              rank: 1,
-              revenue: 45000,
-              performance_percent: 95,
-              products: {
-                name: "Executive Office Chair",
-                image_url: "/pics/chair.jpg",
-                price: 1500,
-                category_id: "chairs",
-              },
-            },
-            {
-              rank: 2,
-              revenue: 38000,
-              performance_percent: 88,
-              products: {
-                name: "Standing Desk Pro",
-                image_url: "/pics/desk.jpg",
-                price: 2200,
-                category_id: "desks",
-              },
-            },
-            {
-              rank: 3,
-              revenue: 32000,
-              performance_percent: 78,
-              products: {
-                name: "Luxury Sofa Set",
-                image_url: "/pics/sofa.png",
-                price: 4500,
-                category_id: "sofas",
-              },
-            },
-            {
-              rank: 4,
-              revenue: 28000,
-              performance_percent: 72,
-              products: {
-                name: "LED Desk Lamp",
-                image_url: "/pics/lamp.jpg",
-                price: 180,
-                category_id: "lighting",
-              },
-            },
-            {
-              rank: 5,
-              revenue: 22000,
-              performance_percent: 65,
-              products: {
-                name: "Bookshelf Cabinet",
-                image_url: "/pics/cabinet.jpg",
-                price: 800,
-                category_id: "storage",
-              },
-            },
-          ];
+          setError("Failed to load top products. No data available.");
+        }
+      } else if (data && data.length > 0) {
+        // Process real data from v_top_products
+        const processedProducts = data.map((item, index) => ({
+          rank: index + 1,
+          revenue: item.view_count * 50 + item.cart_count * 100 + item.inquiry_count * 500,
+          performance_percent: Math.min(100, Math.round(item.performance_score / 10)),
+          view_count: item.view_count,
+          cart_count: item.cart_count,
+          inquiry_count: item.inquiry_count,
+          products: {
+            name: item.product_name || "Unknown Product",
+            image_url: item.image_url,
+            price: item.price || 0,
+            category_id: "general",
+          },
+        }));
 
-          setTopProducts(mockProducts);
-          setTotalRevenue(
-            mockProducts.reduce((sum, item) => sum + item.revenue, 0)
-          );
-          setGrowth(18.5);
+        setTopProducts(processedProducts);
+        const revenueSum = processedProducts.reduce(
+          (sum, item) => sum + parseFloat(item.revenue || 0),
+          0
+        );
+        setTotalRevenue(revenueSum);
+        setGrowth(15);
+      } else {
+        // No data available
+        if (DEMO_MODE) {
+          setIsUsingMockData(true);
+          const mockData = generateMockData();
+          setTopProducts(mockData.products);
+          setTotalRevenue(mockData.totalRevenue);
+          setGrowth(mockData.growth);
+        } else {
+          setError("No product data available. Start tracking events on your client site.");
         }
       }
     } catch (err) {
-      setError("An unexpected error occurred");
+      console.error("Unexpected error:", err);
+      if (DEMO_MODE) {
+        setIsUsingMockData(true);
+        const mockData = generateMockData();
+        setTopProducts(mockData.products);
+        setTotalRevenue(mockData.totalRevenue);
+        setGrowth(mockData.growth);
+      } else {
+        setError("An unexpected error occurred");
+      }
     } finally {
       setLoading(false);
     }
+  };
+
+  // Generate mock data for demo mode
+  const generateMockData = () => {
+    const mockProducts = [
+      {
+        rank: 1,
+        revenue: 45000,
+        performance_percent: 95,
+        products: {
+          name: "Executive Office Chair",
+          image_url: "/pics/chair.jpg",
+          price: 1500,
+          category_id: "chairs",
+        },
+      },
+      {
+        rank: 2,
+        revenue: 38000,
+        performance_percent: 88,
+        products: {
+          name: "Standing Desk Pro",
+          image_url: "/pics/desk.jpg",
+          price: 2200,
+          category_id: "desks",
+        },
+      },
+      {
+        rank: 3,
+        revenue: 32000,
+        performance_percent: 78,
+        products: {
+          name: "Luxury Sofa Set",
+          image_url: "/pics/sofa.png",
+          price: 4500,
+          category_id: "sofas",
+        },
+      },
+      {
+        rank: 4,
+        revenue: 28000,
+        performance_percent: 72,
+        products: {
+          name: "LED Desk Lamp",
+          image_url: "/pics/lamp.jpg",
+          price: 180,
+          category_id: "lighting",
+        },
+      },
+      {
+        rank: 5,
+        revenue: 22000,
+        performance_percent: 65,
+        products: {
+          name: "Bookshelf Cabinet",
+          image_url: "/pics/cabinet.jpg",
+          price: 800,
+          category_id: "storage",
+        },
+      },
+    ];
+
+    return {
+      products: mockProducts,
+      totalRevenue: mockProducts.reduce((sum, item) => sum + item.revenue, 0),
+      growth: 18.5,
+    };
   };
 
   const refreshData = async () => {
     setRefreshing(true);
     await fetchTopProducts();
     setRefreshing(false);
+  };
+
+  const handleExport = () => {
+    if (!topProducts || topProducts.length === 0) return;
+
+    const exportData = topProducts.map(item => ({
+      Rank: item.rank,
+      Product: item.products?.name || "Unknown",
+      Category: item.products?.category_id || "N/A",
+      "Revenue (GHS)": item.revenue,
+      "Price (GHS)": item.products?.price,
+      "Performance (%)": item.performance_percent
+    }));
+
+    exportToCSV(exportData, "top_products");
   };
 
   const getRankIcon = (rank) => {
@@ -255,7 +290,11 @@ export default function TopProducts() {
               Refresh
             </button>
 
-            <button className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-white/50 rounded-lg transition-colors">
+            <button 
+              onClick={handleExport}
+              disabled={loading || !topProducts.length}
+              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-white/50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <Download className="w-4 h-4" />
               Export
             </button>

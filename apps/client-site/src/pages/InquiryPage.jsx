@@ -262,10 +262,10 @@ export default function ProductInquiry() {
         <div className="absolute bottom-40 left-1/4 w-24 h-24 bg-gradient-to-r from-green-300 to-yellow-300 rounded-full blur-2xl animate-bounce"></div>
       </div>
 
-      <Header />
+      <Header forceOpaque={true} />
 
       {/* Enhanced Hero Section */}
-      <section className="relative py-20 px-4 overflow-hidden">
+      <section className="relative py-20 px-4 overflow-hidden mt-16">
         <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-yellow-600/10"></div>
         <div className="relative max-w-4xl mx-auto text-center">
           <div

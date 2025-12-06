@@ -1,6 +1,6 @@
 // Utility functions for handling loading states and network resilience
 
-export const createTimeoutPromise = (name, timeoutMs = 10000) =>
+export const createTimeoutPromise = (name, timeoutMs = 15000) =>
   new Promise((_, reject) =>
     setTimeout(
       () => reject(new Error(`${name} timeout after ${timeoutMs}ms`)),
@@ -8,7 +8,7 @@ export const createTimeoutPromise = (name, timeoutMs = 10000) =>
     )
   );
 
-export const withTimeout = async (promise, name, timeoutMs = 10000) => {
+export const withTimeout = async (promise, name, timeoutMs = 15000) => {
   try {
     return await Promise.race([promise, createTimeoutPromise(name, timeoutMs)]);
   } catch (error) {

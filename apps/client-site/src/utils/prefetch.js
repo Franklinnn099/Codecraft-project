@@ -10,7 +10,7 @@ export const prefetchProducts = async () => {
 
     const { data, error } = await supabase
       .from("products")
-      .select("id, name, price, image_url, category_id, description")
+      .select("id, name, image_url, category_id, description")
       .limit(8); // Fetch a few more for product page navigation
 
     if (!error && data) {

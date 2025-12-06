@@ -454,7 +454,7 @@ export default function Homepage() {
                   onClick={() => setShowSmartPopup(false)}
                   className="text-gray-500 text-sm hover:text-gray-700"
                 >
-                  No thanks, I'll pay full price
+                  No thanks, I'm not interested
                 </button>
               </div>
             </div>

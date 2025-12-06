@@ -402,13 +402,22 @@ export default function ProductList() {
             </h1>
             <p className="text-gray-600 mt-1">Manage your product inventory</p>
           </div>
-          <Link
-            to="/add-product"
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            <Plus className="w-5 h-5" />
-            Add Product
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/bulk-import"
+              className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <Upload className="w-5 h-5" />
+              Bulk Import
+            </Link>
+            <Link
+              to="/add-product"
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <Plus className="w-5 h-5" />
+              Add Product
+            </Link>
+          </div>
         </div>
 
         {/* Statistics Cards */}
@@ -601,9 +610,45 @@ export default function ProductList() {
                   <Trash2 className="w-4 h-4" />
                   Delete Selected
                 </button>
-                <button className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                <button 
+                  onClick={() => {
+                    const csvContent = [
+                      ["ID", "Name", "SKU", "Category", "Subcategory", "Price", "Stock", "Status", "Description"],
+                      ...selectedProducts.map(id => {
+                        const p = products.find(prod => prod.id === id);
+                        return [
+                          p.id,
+                          `"${p.name.replace(/"/g, '""')}"`, // Escape quotes
+                          p.sku || "",
+                          p.categories?.name || "",
+                          p.subcategories?.name || "",
+                          p.price,
+                          p.stock_quantity,
+                          p.status,
+                          `"${(p.description || "").replace(/"/g, '""')}"`
+                        ];
+                      })
+                    ].map(e => e.join(",")).join("\n");
+
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement("a");
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", "products_export.csv");
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
                   <Download className="w-4 h-4" />
                   Export
+                </button>
+                <button 
+                  onClick={() => navigate("/bulk-import")}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                  <Upload className="w-4 h-4" />
+                  Import
                 </button>
               </div>
             </div>

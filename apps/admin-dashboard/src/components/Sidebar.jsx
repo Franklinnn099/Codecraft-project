@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import {
   LayoutDashboard,
   Box,
@@ -30,6 +31,7 @@ import {
   Clock,
   MessageSquare,
   Mail,
+  Crown,
 } from "lucide-react";
 
 export default function Sidebar({ collapsed, onToggle }) {
@@ -39,6 +41,8 @@ export default function Sidebar({ collapsed, onToggle }) {
   const [usersOpen, setUsersOpen] = useState(false);
   const [inquiriesOpen, setInquiriesOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { signOut, isSuperAdmin, adminUser } = useAuth();
 
   // Close dropdowns when sidebar collapses
   useEffect(() => {
@@ -109,7 +113,8 @@ export default function Sidebar({ collapsed, onToggle }) {
       subItems: [
         { title: "All Users", path: "/users", icon: Users },
         { title: "Add User", path: "/add-user", icon: UserPlus },
-        { title: "Admin Roles", path: "/admin-roles", icon: Shield },
+        { title: "Admin Roles", path: "/admin-roles", icon: Shield, superAdminOnly: true },
+        { title: "Admin Users", path: "/admin-users", icon: Crown, superAdminOnly: true },
         { title: "Customers", path: "/customers", icon: UserCheck },
       ],
     },
@@ -196,7 +201,9 @@ export default function Sidebar({ collapsed, onToggle }) {
 
           {item.isOpen && !collapsed && (
             <div className="mt-2 ml-4 space-y-1 border-l-2 border-gray-200 dark:border-gray-600 pl-4">
-              {item.subItems.map((subItem) => (
+              {item.subItems
+                .filter(subItem => !subItem.superAdminOnly || isSuperAdmin)
+                .map((subItem) => (
                 <NavLink
                   key={subItem.path}
                   to={subItem.path}
@@ -241,11 +248,20 @@ export default function Sidebar({ collapsed, onToggle }) {
   };
 
   return (
-    <aside
-      className={`fixed top-0 left-0 h-screen bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg shadow-2xl transition-all duration-300 z-50 ${
-        collapsed ? "w-20" : "w-64"
-      }`}
-    >
+    <>
+      {/* Mobile Overlay */}
+      {!collapsed && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm transition-opacity duration-300"
+          onClick={onToggle}
+        />
+      )}
+
+      <aside
+        className={`fixed top-0 left-0 h-screen bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg shadow-2xl transition-all duration-300 z-50 
+          ${collapsed ? "-translate-x-full lg:translate-x-0 lg:w-20" : "translate-x-0 w-64"}
+        `}
+      >
       {/* Header */}
       <div
         className={`flex items-center gap-3 p-6 border-b border-gray-200 dark:border-gray-700 ${
@@ -302,7 +318,13 @@ export default function Sidebar({ collapsed, onToggle }) {
             <Menu className="w-4 h-4" />
           </button>
           {!collapsed && (
-            <button className="flex items-center gap-2 p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-all duration-200 hover:scale-105">
+            <button 
+              onClick={async () => {
+                await signOut();
+                navigate('/login');
+              }}
+              className="flex items-center gap-2 p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-all duration-200 hover:scale-105"
+            >
               <LogOut className="w-4 h-4" />
               <span className="text-sm font-medium">Sign Out</span>
             </button>
@@ -310,5 +332,6 @@ export default function Sidebar({ collapsed, onToggle }) {
         </div>
       </div>
     </aside>
+    </>
   );
 }

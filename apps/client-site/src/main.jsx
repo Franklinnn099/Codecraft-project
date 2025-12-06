@@ -5,8 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Homepage from "./pages/home";
 import ShopPage from "./pages/ShopPage";
 import ContactPage from "./pages/ContactPage";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import AuthPage from "./pages/AuthPage";
 import Profile from "./pages/Profile";
 import ProfileWrapper from "./components/ProfileWrapper";
 import UserManagement from "./pages/UserManagement";
@@ -25,6 +24,9 @@ import NewsletterForm from "./pages/NewsletterForm";
 import BlogList from "./pages/BlogList";
 import BlogDetail from "./pages/BlogDetail";
 import { backgroundPrefetch } from "./utils/prefetch";
+import ErrorBoundary from "./components/ErrorBoundary";
+import OfflineIndicator from "./components/OfflineIndicator";
+import { registerServiceWorker } from "./utils/serviceWorker";
 
 // ProtectedRoute component
 const ProtectedRoute = ({ children, showLoginPage = false }) => {
@@ -114,18 +116,23 @@ const root = createRoot(document.getElementById("root"));
 // Start background prefetching for instant loading
 backgroundPrefetch();
 
+// Register service worker for offline support and caching
+registerServiceWorker();
+
 root.render(
   <StrictMode>
-    <AuthProvider>
-      <CartProvider>
-        <Router>
-          <Routes>
+    <ErrorBoundary>
+      <AuthProvider>
+        <CartProvider>
+          <Router>
+            <OfflineIndicator />
+            <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/home" element={<Homepage />} />
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/contact" element={<ContactPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<AuthPage />} />
+            <Route path="/signup" element={<AuthPage />} />
             <Route
               path="/profile"
               element={
@@ -134,14 +141,8 @@ root.render(
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/cart"
-              element={
-                <ProtectedRoute>
-                  <CartPage />
-                </ProtectedRoute>
-              }
-            />
+            {/* Public Route: Cart Page */}
+            <Route path="/cart" element={<CartPage />} />
             <Route path="/services" element={<OurServicesPage />} />
             <Route path="/interior-decor" element={<InteriorDecor />} />
             <Route path="/inquiry" element={<ProductInquiry />} />
@@ -172,5 +173,6 @@ root.render(
         </Router>
       </CartProvider>
     </AuthProvider>
+  </ErrorBoundary>
   </StrictMode>
 );

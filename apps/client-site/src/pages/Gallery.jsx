@@ -183,16 +183,25 @@ export default function Gallery() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [modalImage, setModalImage] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [viewMode, setViewMode] = useState("grid"); // grid or masonry
+  const [viewMode, setViewMode] = useState("masonry"); // Default to masonry for more creative feel
   const [favorites, setFavorites] = useState(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   // Simulate loading effect
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Parallax effect for hero
+  const handleMouseMove = (e) => {
+    const { clientX, clientY } = e;
+    const moveX = (clientX - window.innerWidth / 2) * 0.05;
+    const moveY = (clientY - window.innerHeight / 2) * 0.05;
+    setMousePosition({ x: moveX, y: moveY });
+  };
 
   // Intersection Observer for animations
   useEffect(() => {
@@ -205,16 +214,16 @@ export default function Gallery() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("animate-fadeInUp");
+          entry.target.classList.remove("opacity-0", "translate-y-10");
         }
       });
     }, observerOptions);
 
-    // Observe all gallery items
     const galleryItems = document.querySelectorAll(".gallery-item");
     galleryItems.forEach((item) => observer.observe(item));
 
     return () => observer.disconnect();
-  }, [selectedCategory, searchTerm]);
+  }, [selectedCategory, searchTerm, viewMode]);
 
   const filteredProducts = products.filter((product) => {
     const matchesCategory =
@@ -257,12 +266,17 @@ export default function Gallery() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+      <div className="min-h-screen bg-gray-900 flex flex-col">
         <Header />
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-green-500 border-t-transparent mx-auto mb-4"></div>
-            <p className="text-gray-600 text-lg">Loading gallery...</p>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="relative">
+            <div className="w-24 h-24 border-4 border-white/20 border-t-green-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Sparkles className="w-8 h-8 text-yellow-400 animate-pulse" />
+            </div>
+            <p className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-white/60 text-sm tracking-widest uppercase">
+              Curating Gallery
+            </p>
           </div>
         </div>
       </div>
@@ -270,234 +284,218 @@ export default function Gallery() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-gray-50" onMouseMove={handleMouseMove}>
       <Header />
 
-      {/* Hero Section */}
-      <div className="relative py-20 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 to-yellow-600/20"></div>
-        <div className="relative max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium mb-6 animate-fadeInDown">
-            <Sparkles className="w-4 h-4 mr-2" />
-            Explore Our Collection
+      {/* Interactive Hero Section */}
+      <div className="relative py-32 px-4 overflow-hidden bg-gray-900 perspective-1000">
+        {/* Parallax Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div 
+            className="absolute -top-24 -left-24 w-96 h-96 bg-green-500/20 rounded-full blur-[100px] transition-transform duration-100 ease-out"
+            style={{ transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1}px)` }}
+          ></div>
+          <div 
+            className="absolute top-1/2 right-0 w-80 h-80 bg-yellow-500/20 rounded-full blur-[100px] transition-transform duration-100 ease-out"
+            style={{ transform: `translate(${mousePosition.x}px, ${mousePosition.y}px)` }}
+          ></div>
+          <div 
+            className="absolute bottom-0 left-1/3 w-64 h-64 bg-blue-500/20 rounded-full blur-[100px] transition-transform duration-100 ease-out"
+            style={{ transform: `translate(${mousePosition.x * 0.5}px, ${mousePosition.y * 0.5}px)` }}
+          ></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto text-center z-10">
+          <div className="inline-flex items-center px-6 py-2 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-full text-sm font-medium mb-8 animate-fadeInDown hover:bg-white/10 transition-all cursor-default hover:scale-105 duration-300">
+            <Sparkles className="w-4 h-4 mr-2 text-yellow-400 animate-spin-slow" />
+            Curated Design Collection
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fadeInUp">
-            <span className="bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">
-              Product Gallery
+          <h1 className="text-6xl md:text-8xl font-bold mb-8 animate-fadeInUp tracking-tighter text-white">
+            Visual
+            <span className="relative inline-block ml-4">
+              <span className="relative z-10 bg-gradient-to-r from-green-400 via-yellow-400 to-orange-400 bg-clip-text text-transparent">
+                Masterpieces
+              </span>
+              <span className="absolute -bottom-2 left-0 w-full h-3 bg-green-500/30 blur-lg transform -skew-x-12"></span>
             </span>
           </h1>
 
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 animate-fadeInUp animation-delay-200">
-            Discover our comprehensive collection of premium office furniture
-            designed to enhance productivity and comfort in your workspace.
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-12 animate-fadeInUp animation-delay-200 leading-relaxed font-light">
+            Explore our gallery of premium office aesthetics. Where functionality meets artistic design in every detail.
           </p>
 
-          {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mb-12 animate-fadeInUp animation-delay-400">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search furniture, descriptions, or tags..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl 
-                         focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none text-lg
-                         shadow-lg hover:shadow-xl transition-all duration-300"
-              />
+          {/* Floating Search Bar */}
+          <div className="max-w-xl mx-auto mb-16 animate-fadeInUp animation-delay-400 relative z-20">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-green-500 to-yellow-500 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+              <div className="relative bg-gray-900/80 backdrop-blur-xl rounded-2xl flex items-center p-2 border border-white/10 shadow-2xl">
+                <Search className="ml-4 text-gray-400 w-6 h-6 group-focus-within:text-yellow-400 transition-colors" />
+                <input
+                  type="text"
+                  placeholder="Search for inspiration..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-4 py-3 bg-transparent border-none focus:ring-0 text-white placeholder-gray-500 text-lg"
+                />
+                <button className="bg-white text-black p-3 rounded-xl hover:bg-yellow-400 transition-all duration-300 hover:rotate-90">
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 pb-20">
-        {/* Controls Section */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
-          {/* Category Filters */}
-          <div className="flex flex-wrap gap-3">
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20 pb-20">
+        {/* Glassmorphism Controls */}
+        <div className="bg-white/10 backdrop-blur-xl rounded-[2rem] shadow-2xl border border-white/20 p-4 mb-12 flex flex-col lg:flex-row items-center justify-between gap-6 animate-fadeInUp">
+          {/* Category Pills */}
+          <div className="flex flex-wrap justify-center gap-3">
             {categories.map((cat) => {
               const IconComponent = cat.icon;
+              const isActive = selectedCategory === cat.name;
               return (
                 <button
                   key={cat.name}
                   onClick={() => setSelectedCategory(cat.name)}
-                  className={`group relative flex items-center px-6 py-3 rounded-2xl font-medium transition-all duration-300 transform hover:scale-105 ${
-                    selectedCategory === cat.name
-                      ? "bg-gradient-to-r from-green-500 to-yellow-500 text-white shadow-lg"
-                      : "bg-white/80 backdrop-blur-sm text-gray-700 border border-gray-200 hover:border-green-300 hover:bg-green-50"
+                  className={`relative px-6 py-3 rounded-xl font-medium transition-all duration-300 overflow-hidden group ${
+                    isActive ? "text-black shadow-lg scale-105" : "text-white/70 hover:bg-white/10"
                   }`}
                 >
-                  <IconComponent className="w-4 h-4 mr-2" />
-                  <span>{cat.name}</span>
-                  <span
-                    className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
-                      selectedCategory === cat.name
-                        ? "bg-white/20 text-white"
-                        : "bg-gray-100 text-gray-600 group-hover:bg-green-100 group-hover:text-green-700"
-                    }`}
-                  >
-                    {cat.count}
-                  </span>
+                  {isActive && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-yellow-400 animate-gradient-x"></div>
+                  )}
+                  <div className="relative flex items-center gap-2">
+                    <IconComponent className={`w-4 h-4 ${isActive ? "text-black" : "text-white/50 group-hover:text-white"}`} />
+                    <span>{cat.name}</span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${
+                      isActive ? "bg-black/20 text-black" : "bg-white/10 text-white/50"
+                    }`}>
+                      {cat.count}
+                    </span>
+                  </div>
                 </button>
               );
             })}
           </div>
 
-          {/* View Controls */}
-          <div className="flex items-center gap-4">
-            <div className="flex bg-white/80 backdrop-blur-sm rounded-2xl p-1 border border-gray-200">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`p-3 rounded-xl transition-all duration-300 ${
-                  viewMode === "grid"
-                    ? "bg-green-500 text-white shadow-md"
-                    : "text-gray-500 hover:text-green-600"
-                }`}
-              >
-                <Grid className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => setViewMode("masonry")}
-                className={`p-3 rounded-xl transition-all duration-300 ${
-                  viewMode === "masonry"
-                    ? "bg-green-500 text-white shadow-md"
-                    : "text-gray-500 hover:text-green-600"
-                }`}
-              >
-                <LayoutGrid className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="text-sm text-gray-600 bg-white/80 backdrop-blur-sm px-4 py-3 rounded-2xl border border-gray-200">
-              {filteredProducts.length} items found
-            </div>
+          {/* View Toggles */}
+          <div className="flex items-center gap-2 bg-black/20 p-1.5 rounded-2xl border border-white/10">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`p-3 rounded-xl transition-all duration-300 flex items-center gap-2 ${
+                viewMode === "grid"
+                  ? "bg-white text-black shadow-lg"
+                  : "text-white/50 hover:text-white"
+              }`}
+            >
+              <Grid className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setViewMode("masonry")}
+              className={`p-3 rounded-xl transition-all duration-300 flex items-center gap-2 ${
+                viewMode === "masonry"
+                  ? "bg-white text-black shadow-lg"
+                  : "text-white/50 hover:text-white"
+              }`}
+            >
+              <LayoutGrid className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
-        {/* Results Counter and Featured Badge */}
+        {/* Results Counter */}
         {searchTerm && (
-          <div className="mb-8 p-4 bg-green-50 border border-green-200 rounded-2xl">
-            <p className="text-green-800">
-              <span className="font-semibold">{filteredProducts.length}</span>{" "}
-              results found for "
-              <span className="font-semibold">{searchTerm}</span>"
-              {selectedCategory !== "All" && ` in ${selectedCategory}`}
+          <div className="mb-8 text-center animate-fadeIn">
+            <p className="text-gray-500 text-lg">
+              Found <span className="text-gray-900 font-bold">{filteredProducts.length}</span> masterpieces
             </p>
           </div>
         )}
 
-        {/* Gallery Grid */}
+        {/* Creative Gallery Grid */}
         <div
-          className={`grid gap-8 ${
+          className={`${
             viewMode === "grid"
-              ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-              : "masonry-grid"
+              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+              : "columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-8 space-y-8"
           }`}
         >
           {filteredProducts.map((product, index) => (
             <div
               key={product.id}
-              className={`gallery-item group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl 
-                        transition-all duration-500 transform hover:-translate-y-2 cursor-pointer opacity-0
-                        ${viewMode === "masonry" ? "masonry-item" : ""}`}
+              className={`gallery-item group relative break-inside-avoid rounded-[2rem] overflow-hidden cursor-pointer opacity-0 translate-y-10 transition-all duration-700 ease-out hover:z-10 ${
+                viewMode === "masonry" ? "mb-8" : ""
+              }`}
               onClick={() => openModal(product)}
-              style={{ animationDelay: `${index * 100}ms` }}
+              style={{ transitionDelay: `${index * 50}ms` }}
             >
-              {/* Featured Badge */}
-              {product.featured && (
-                <div className="absolute top-4 left-4 z-10">
-                  <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
-                    <Star className="w-3 h-3 inline mr-1" />
-                    Featured
-                  </div>
-                </div>
-              )}
-
-              {/* Favorite Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleFavorite(product.id);
-                }}
-                className="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full 
-                         hover:bg-white transition-all duration-300 hover:scale-110"
-              >
-                <Heart
-                  className={`w-5 h-5 ${
-                    favorites.has(product.id)
-                      ? "fill-red-500 text-red-500"
-                      : "text-gray-600"
-                  }`}
-                />
-              </button>
-
-              {/* Image Container */}
-              <div className="relative aspect-[4/3] overflow-hidden">
+              {/* Image Container with Tilt Effect */}
+              <div className="relative overflow-hidden bg-gray-200 aspect-[3/4] transform transition-transform duration-700 group-hover:scale-[1.02]">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                   loading="lazy"
                 />
 
-                {/* Overlay */}
-                <div
-                  className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent 
-                              opacity-0 group-hover:opacity-100 transition-all duration-500"
-                >
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <div className="flex items-center justify-between text-white">
-                      <div className="flex items-center space-x-2">
-                        <ZoomIn className="w-5 h-5" />
-                        <span className="text-sm font-medium">
-                          View Details
-                        </span>
-                      </div>
-                      <div className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
-                        <Eye className="w-4 h-4" />
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-all duration-500"></div>
+
+                {/* Content Overlay - Slide Up Effect */}
+                <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                  {/* Top Tags */}
+                  <div className="absolute top-6 left-6 flex flex-wrap gap-2 transform -translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                    {product.featured && (
+                      <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
+                        <Star className="w-3 h-3 fill-current" /> FEATURED
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Main Info */}
+                  <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <span className="text-green-400 text-sm font-bold tracking-wider uppercase mb-2 block">
+                      {product.category}
+                    </span>
+                    <h3 className="text-2xl font-bold text-white mb-2 leading-tight group-hover:text-yellow-400 transition-colors">
+                      {product.name}
+                    </h3>
+                    
+                    {/* Hidden Details Reveal */}
+                    <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
+                      <div className="overflow-hidden">
+                        <p className="text-gray-300 text-sm line-clamp-2 mb-4 pt-2">
+                          {product.description}
+                        </p>
+                        <div className="flex items-center justify-between pt-4 border-t border-white/20">
+                          <div className="flex gap-2">
+                            {product.tags.slice(0, 2).map((tag, idx) => (
+                              <span key={idx} className="text-xs text-white/70 bg-white/10 px-2 py-1 rounded-md">
+                                #{tag}
+                              </span>
+                            ))}
+                          </div>
+                          <div className="flex gap-2">
+                            <button 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFavorite(product.id);
+                              }}
+                              className="p-2 bg-white/10 hover:bg-white text-white hover:text-red-500 rounded-full transition-all duration-300"
+                            >
+                              <Heart className={`w-4 h-4 ${favorites.has(product.id) ? "fill-red-500 text-red-500" : ""}`} />
+                            </button>
+                            <button className="p-2 bg-white text-black rounded-full hover:bg-yellow-400 transition-colors">
+                              <ArrowRight className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Product Info */}
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-green-600 bg-green-50 px-3 py-1 rounded-full">
-                    {product.category}
-                  </span>
-                </div>
-
-                <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors">
-                  {product.name}
-                </h3>
-
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {product.description}
-                </p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {product.tags.slice(0, 3).map((tag, tagIndex) => (
-                    <span
-                      key={tagIndex}
-                      className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-md"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Action Button */}
-                <button
-                  className="w-full bg-gradient-to-r from-green-500 to-yellow-500 text-white py-3 rounded-xl
-                                 font-medium hover:from-green-600 hover:to-yellow-600 transition-all duration-300
-                                 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                >
-                  View in Gallery
-                </button>
               </div>
             </div>
           ))}
@@ -505,200 +503,140 @@ export default function Gallery() {
 
         {/* Empty State */}
         {filteredProducts.length === 0 && (
-          <div className="text-center py-20">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">
-              No products found
+          <div className="text-center py-32">
+            <div className="inline-block p-6 rounded-full bg-gray-100 mb-6 animate-bounce">
+              <Search className="w-12 h-12 text-gray-400" />
+            </div>
+            <h3 className="text-3xl font-bold text-gray-900 mb-2">
+              No masterpieces found
             </h3>
-            <p className="text-gray-600 mb-6">
-              Try adjusting your search terms or category filters
+            <p className="text-gray-500 mb-8 text-lg">
+              We couldn't find any matches for "{searchTerm}"
             </p>
             <button
               onClick={() => {
                 setSearchTerm("");
                 setSelectedCategory("All");
               }}
-              className="bg-gradient-to-r from-green-500 to-yellow-500 text-white px-6 py-3 rounded-xl
-                       font-medium hover:from-green-600 hover:to-yellow-600 transition-all duration-300"
+              className="bg-black text-white px-8 py-4 rounded-2xl font-bold hover:bg-gray-800 transition-all duration-300 hover:scale-105 shadow-xl"
             >
-              Clear Filters
+              View Full Collection
             </button>
           </div>
         )}
       </div>
 
-      {/* Enhanced Modal Lightbox */}
+      {/* Immersive Modal Experience */}
       {modalImage && (
-        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-          <div className="relative max-w-6xl w-full mx-auto">
-            {/* Modal Navigation */}
-            <div className="absolute top-4 left-4 right-4 flex justify-between items-center z-10">
-              <div className="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white">
-                <span className="text-sm font-medium">
-                  {currentImageIndex + 1} / {filteredProducts.length}
-                </span>
-              </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+          <div className="absolute inset-0 bg-black/95 backdrop-blur-2xl transition-opacity duration-500" onClick={() => setModalImage(null)}></div>
+          
+          <div className="relative w-full max-w-7xl h-[85vh] bg-gray-900 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row animate-scaleIn border border-white/10">
+            {/* Close Button */}
+            <button
+              onClick={() => setModalImage(null)}
+              className="absolute top-6 right-6 z-50 p-3 bg-black/50 text-white rounded-full hover:bg-white hover:text-black transition-all duration-300 backdrop-blur-md border border-white/10"
+            >
+              <X className="w-6 h-6" />
+            </button>
 
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleFavorite(modalImage.id);
-                  }}
-                  className="p-3 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-all duration-300"
-                >
-                  <Heart
-                    className={`w-6 h-6 ${
-                      favorites.has(modalImage.id)
-                        ? "fill-red-500 text-red-500"
-                        : ""
-                    }`}
-                  />
-                </button>
-
-                <button
-                  onClick={() => setModalImage(null)}
-                  className="p-3 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-all duration-300"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
+            {/* Image Section */}
+            <div className="relative lg:w-2/3 h-1/2 lg:h-full bg-black flex items-center justify-center group overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50 pointer-events-none z-10"></div>
+              <img
+                src={modalImage.image}
+                alt={modalImage.name}
+                className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-105"
+              />
+              
+              {/* Navigation Arrows */}
+              {filteredProducts.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); navigateModal("prev"); }}
+                    className="absolute left-6 top-1/2 -translate-y-1/2 p-4 bg-white/10 text-white rounded-full hover:bg-white hover:text-black transition-all backdrop-blur-md border border-white/10 z-20 hover:scale-110"
+                  >
+                    <ArrowLeft className="w-6 h-6" />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); navigateModal("next"); }}
+                    className="absolute right-6 top-1/2 -translate-y-1/2 p-4 bg-white/10 text-white rounded-full hover:bg-white hover:text-black transition-all backdrop-blur-md border border-white/10 z-20 hover:scale-110"
+                  >
+                    <ArrowRight className="w-6 h-6" />
+                  </button>
+                </>
+              )}
             </div>
 
-            {/* Navigation Arrows */}
-            {filteredProducts.length > 1 && (
-              <>
-                <button
-                  onClick={() => navigateModal("prev")}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 p-4 bg-white/10 backdrop-blur-sm 
-                           rounded-full text-white hover:bg-white/20 transition-all duration-300 z-10"
-                >
-                  <ArrowLeft className="w-6 h-6" />
-                </button>
-
-                <button
-                  onClick={() => navigateModal("next")}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 p-4 bg-white/10 backdrop-blur-sm 
-                           rounded-full text-white hover:bg-white/20 transition-all duration-300 z-10"
-                >
-                  <ArrowRight className="w-6 h-6" />
-                </button>
-              </>
-            )}
-
-            {/* Modal Content */}
-            <div className="bg-white rounded-3xl overflow-hidden shadow-2xl max-w-4xl mx-auto">
-              {/* Modal Image */}
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={modalImage.image}
-                  alt={modalImage.name}
-                  className="w-full h-full object-cover"
-                />
-
-                {/* Featured Badge in Modal */}
-                {modalImage.featured && (
-                  <div className="absolute top-6 left-6">
-                    <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-                      <Star className="w-4 h-4 inline mr-2" />
-                      Featured Product
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Modal Info */}
-              <div className="p-8">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
-                    {modalImage.category}
-                  </span>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-500">Share:</span>
-                    <div className="flex space-x-2">
-                      <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
-                        <Download className="w-4 h-4 text-gray-600" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                  {modalImage.name}
-                </h2>
-
-                <p className="text-gray-600 text-lg mb-6 leading-relaxed">
-                  {modalImage.description}
-                </p>
-
-                {/* Tags in Modal */}
-                <div className="mb-6">
-                  <h4 className="text-sm font-semibold text-gray-800 mb-3">
-                    Features & Tags:
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {modalImage.tags.map((tag, index) => (
-                      <span
-                        key={index}
-                        className="bg-gradient-to-r from-green-100 to-yellow-100 text-gray-700 px-3 py-1 rounded-full text-sm font-medium"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Modal Actions */}
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link
-                    to={`/product/${modalImage.id}`}
-                    className="flex-1 bg-gradient-to-r from-green-500 to-yellow-500 text-white py-4 px-6 rounded-2xl
-                             font-semibold text-center hover:from-green-600 hover:to-yellow-600 transition-all duration-300
-                             transform hover:scale-105 shadow-lg hover:shadow-xl"
+            {/* Info Section */}
+            <div className="lg:w-1/3 h-1/2 lg:h-full bg-white p-8 lg:p-12 overflow-y-auto relative">
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-500 to-yellow-500"></div>
+              
+              <div className="flex items-center justify-between mb-8">
+                <span className="px-4 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-bold tracking-wider uppercase">
+                  {modalImage.category}
+                </span>
+                <div className="flex gap-3">
+                  <button 
+                    onClick={() => toggleFavorite(modalImage.id)}
+                    className={`p-3 rounded-full border transition-all duration-300 ${
+                      favorites.has(modalImage.id) 
+                        ? "border-red-200 bg-red-50 text-red-500 scale-110" 
+                        : "border-gray-100 hover:border-gray-300 text-gray-400 hover:text-gray-600"
+                    }`}
                   >
-                    View Product Details
-                  </Link>
-
-                  <button
-                    onClick={() => setModalImage(null)}
-                    className="flex-1 bg-gray-100 text-gray-700 py-4 px-6 rounded-2xl font-semibold
-                             hover:bg-gray-200 transition-all duration-300"
-                  >
-                    Close Gallery
+                    <Heart className={`w-5 h-5 ${favorites.has(modalImage.id) ? "fill-current" : ""}`} />
+                  </button>
+                  <button className="p-3 rounded-full border border-gray-100 hover:border-gray-300 text-gray-400 hover:text-gray-600 transition-colors">
+                    <Download className="w-5 h-5" />
                   </button>
                 </div>
               </div>
-            </div>
 
-            {/* Thumbnail Strip */}
-            {filteredProducts.length > 1 && (
-              <div className="mt-8 flex justify-center">
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 max-w-2xl overflow-x-auto">
-                  <div className="flex space-x-3">
-                    {filteredProducts.map((product, index) => (
-                      <button
-                        key={product.id}
-                        onClick={() => {
-                          setModalImage(product);
-                          setCurrentImageIndex(index);
-                        }}
-                        className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                          product.id === modalImage.id
-                            ? "border-white shadow-lg transform scale-110"
-                            : "border-white/30 hover:border-white/60"
-                        }`}
-                      >
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
+              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
+                {modalImage.name}
+              </h2>
+
+              <div className="space-y-8 mb-10">
+                <p className="text-gray-600 text-lg leading-relaxed font-light">
+                  {modalImage.description}
+                </p>
+                
+                <div className="flex flex-wrap gap-2">
+                  {modalImage.tags.map((tag, idx) => (
+                    <span key={idx} className="px-4 py-2 bg-gray-50 text-gray-600 rounded-xl text-sm font-medium border border-gray-100">
+                      #{tag}
+                    </span>
+                  ))}
                 </div>
               </div>
-            )}
+
+              <div className="space-y-6 pt-8 border-t border-gray-100">
+                <div className="flex items-center justify-between text-sm text-gray-500">
+                  <span>Product ID</span>
+                  <span className="font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded">#{modalImage.id.toString().padStart(4, '0')}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm text-gray-500">
+                  <span>Availability</span>
+                  <span className="text-green-600 font-bold flex items-center gap-2 bg-green-50 px-3 py-1 rounded-full">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    In Stock
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-10">
+                <Link
+                  to={`/product/${modalImage.id}`}
+                  className="group block w-full py-5 bg-black text-white text-center rounded-2xl font-bold hover:bg-gray-800 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    View Full Details 
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       )}

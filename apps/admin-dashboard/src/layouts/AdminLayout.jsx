@@ -5,23 +5,43 @@ import { supabase } from "../lib/supabaseClient";
 
 export default function AdminLayout({ children, toggleDarkMode, darkMode }) {
   const [userInitial, setUserInitial] = useState("?");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setSidebarCollapsed(true);
+      } else {
+        setSidebarCollapsed(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchUserInitial = async () => {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const userEmail = sessionData?.session?.user?.email;
+      try {
+        const { data: sessionData } = await supabase.auth.getSession();
+        const userEmail = sessionData?.session?.user?.email;
 
-      if (userEmail) {
-        const { data: userData } = await supabase
-          .from("users")
-          .select("name")
-          .eq("email", userEmail)
-          .single();
+        if (userEmail) {
+          const { data: userData } = await supabase
+            .from("admin_users")
+            .select("display_name")
+            .eq("email", userEmail.toLowerCase())
+            .maybeSingle();
 
-        if (userData?.name) {
-          setUserInitial(userData.name.charAt(0).toUpperCase());
+          if (userData?.display_name) {
+            setUserInitial(userData.display_name.charAt(0).toUpperCase());
+          } else {
+            // Fallback to email initial
+            setUserInitial(userEmail.charAt(0).toUpperCase());
+          }
         }
+      } catch (error) {
+        console.error("Error fetching user initial:", error);
       }
     };
 
@@ -38,7 +58,7 @@ export default function AdminLayout({ children, toggleDarkMode, darkMode }) {
 
         <div
           className={`flex-1 transition-all duration-300 ${
-            sidebarCollapsed ? "ml-20" : "ml-64"
+            sidebarCollapsed ? "lg:ml-20" : "lg:ml-64"
           }`}
         >
           <Navbar

@@ -15,7 +15,7 @@ import { useCart } from "../context/CartContext";
 import { supabase } from "../supabase/supabaseClient";
 import debounce from "lodash.debounce";
 
-export default function Header() {
+export default function Header({ forceOpaque = false }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -34,9 +34,16 @@ export default function Header() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener("scroll", handleScroll);
+    // Initialize scroll state based on current position or forceOpaque
+    if (forceOpaque) {
+      setIsScrolled(true);
+    } else {
+      setIsScrolled(window.scrollY > 20);
+      window.addEventListener("scroll", handleScroll);
+    }
+    
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [forceOpaque]);
 
   // Fetch current user on mount
   useEffect(() => {
@@ -222,93 +229,39 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-6">
-            <Link
-              to="/home"
-              className={`relative font-semibold text-sm transition-all duration-300 hover:scale-105 group ${
-                isScrolled
-                  ? "text-gray-700 hover:text-green-600"
-                  : "text-white drop-shadow-lg hover:text-yellow-200"
-              }`}
-            >
-              Home
-              <div
-                className={`absolute -bottom-1 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 ${
-                  isScrolled
-                    ? "bg-gradient-to-r from-green-500 to-yellow-500"
-                    : "bg-yellow-400"
-                }`}
-              ></div>
-            </Link>
-            <Link
-              to="/shop"
-              className={`relative font-semibold text-sm transition-all duration-300 hover:scale-105 group ${
-                isScrolled
-                  ? "text-gray-700 hover:text-green-600"
-                  : "text-white drop-shadow-lg hover:text-yellow-200"
-              }`}
-            >
-              Products
-              <div
-                className={`absolute -bottom-1 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 ${
-                  isScrolled
-                    ? "bg-gradient-to-r from-green-500 to-yellow-500"
-                    : "bg-yellow-400"
-                }`}
-              ></div>
-            </Link>
-            <Link
-              to="/gallery"
-              className={`relative font-semibold text-sm transition-all duration-300 hover:scale-105 group ${
-                isScrolled
-                  ? "text-gray-700 hover:text-green-600"
-                  : "text-white drop-shadow-lg hover:text-yellow-200"
-              }`}
-            >
-              Gallery
-              <div
-                className={`absolute -bottom-1 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 ${
-                  isScrolled
-                    ? "bg-gradient-to-r from-green-500 to-yellow-500"
-                    : "bg-yellow-400"
-                }`}
-              ></div>
-            </Link>
-            <Link
-              to="/services"
-              className={`relative font-semibold text-sm transition-all duration-300 hover:scale-105 group ${
-                isScrolled
-                  ? "text-gray-700 hover:text-green-600"
-                  : "text-white drop-shadow-lg hover:text-yellow-200"
-              }`}
-            >
-              Our Services
-              <div
-                className={`absolute -bottom-1 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 ${
-                  isScrolled
-                    ? "bg-gradient-to-r from-green-500 to-yellow-500"
-                    : "bg-yellow-400"
-                }`}
-              ></div>
-            </Link>
-            <Link
-              to="/blog"
-              className={`relative font-semibold text-sm transition-all duration-300 hover:scale-105 group ${
-                isScrolled
-                  ? "text-gray-700 hover:text-green-600"
-                  : "text-white drop-shadow-lg hover:text-yellow-200"
-              }`}
-            >
-              Blog
-              <div
-                className={`absolute -bottom-1 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 ${
-                  isScrolled
-                    ? "bg-gradient-to-r from-green-500 to-yellow-500"
-                    : "bg-yellow-400"
-                }`}
-              ></div>
-            </Link>
+          {/* Desktop Navigation - Interactive Hover Reveal */}
+          <nav className="hidden lg:flex items-center gap-8">
+            {[
+              { name: "Home", path: "/home" },
+              { name: "Products", path: "/shop" },
+              { name: "Gallery", path: "/gallery" },
+              { name: "Our Services", path: "/services" },
+              { name: "Blog", path: "/blog" },
+            ].map((item) => (
+              <Link
+                key={item.name}
+                to={item.path}
+                className="group relative h-8 overflow-hidden"
+              >
+                <div className="flex flex-col transition-transform duration-300 group-hover:-translate-y-8">
+                  <span
+                    className={`h-8 flex items-center font-bold text-sm tracking-wide ${
+                      isScrolled ? "text-gray-800" : "text-white"
+                    }`}
+                  >
+                    {item.name}
+                  </span>
+                  <span className="h-8 flex items-center font-bold text-sm tracking-wide text-green-500">
+                    {item.name}
+                  </span>
+                </div>
+                <span
+                  className={`absolute bottom-0 left-0 w-full h-0.5 transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${
+                    isScrolled ? "bg-green-500" : "bg-yellow-400"
+                  }`}
+                ></span>
+              </Link>
+            ))}
           </nav>
 
           {/* Right-side icons */}

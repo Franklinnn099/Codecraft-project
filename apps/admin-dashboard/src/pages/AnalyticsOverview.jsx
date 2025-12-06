@@ -33,6 +33,7 @@ import {
   Award,
   Activity,
 } from "lucide-react";
+import { exportToCSV } from "../utils/exportUtils";
 
 ChartJS.register(
   LineElement,
@@ -48,6 +49,9 @@ ChartJS.register(
 const currentYear = new Date().getFullYear();
 const currentMonth = new Date().getMonth() + 1;
 
+// Check for demo mode from environment
+const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true';
+
 export default function AnalyticsOverview() {
   const [month, setMonth] = useState(currentMonth);
   const [year, setYear] = useState(currentYear);
@@ -55,6 +59,7 @@ export default function AnalyticsOverview() {
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState("month");
+  const [isUsingMockData, setIsUsingMockData] = useState(false);
 
   useEffect(() => {
     fetchAnalyticsData();
@@ -62,27 +67,118 @@ export default function AnalyticsOverview() {
 
   const fetchAnalyticsData = async () => {
     setLoading(true);
+    setIsUsingMockData(false);
+    
     try {
-      const { data: statsData, error: statsError } = await supabase
-        .from("analytics_overview")
-        .select("*")
-        .eq("month", month)
-        .eq("year", year)
-        .single();
-
+      // Fetch from v_monthly_analytics view (real-time data)
       const { data: trendData, error: trendError } = await supabase
-        .from("analytics_overview")
+        .from("v_monthly_analytics")
         .select("*")
         .eq("year", year)
-        .order("month", { ascending: true });
+        .order("month_num", { ascending: true });
 
-      if (!statsError) setStats(statsData);
-      if (!trendError) setMonthlyData(trendData || []);
+      if (trendError) {
+        console.error("Error fetching analytics:", trendError);
+        
+        // Only use mock data if DEMO_MODE is enabled
+        if (DEMO_MODE) {
+          setIsUsingMockData(true);
+          const mockData = generateMockData();
+          setMonthlyData(mockData);
+          setStats(mockData.find(d => d.month_num === month) || mockData[mockData.length - 1]);
+        }
+      } else if (!trendData || trendData.length === 0) {
+        // No data available
+        if (DEMO_MODE) {
+          setIsUsingMockData(true);
+          const mockData = generateMockData();
+          setMonthlyData(mockData);
+          setStats(mockData.find(d => d.month_num === month) || mockData[mockData.length - 1]);
+        } else {
+          setMonthlyData([]);
+          setStats(null);
+        }
+      } else {
+        // Process real data
+        const processedData = trendData.map(d => ({
+          month: d.month_num,
+          year: d.year,
+          total_revenue: d.inquiries * 500, // Estimate revenue based on inquiries
+          orders_placed: d.inquiries,
+          site_visits: d.page_views,
+          revenue_growth: 0,
+          orders_growth: 0,
+          aov_growth: 0,
+          visits_growth: 0,
+          average_order_value: d.inquiries > 0 ? (d.inquiries * 500) / d.inquiries : 0,
+        }));
+        
+        // Calculate growth percentages
+        for (let i = 1; i < processedData.length; i++) {
+          const prev = processedData[i - 1];
+          const curr = processedData[i];
+          if (prev.total_revenue > 0) {
+            curr.revenue_growth = Math.round(((curr.total_revenue - prev.total_revenue) / prev.total_revenue) * 100);
+          }
+          if (prev.orders_placed > 0) {
+            curr.orders_growth = Math.round(((curr.orders_placed - prev.orders_placed) / prev.orders_placed) * 100);
+          }
+          if (prev.site_visits > 0) {
+            curr.visits_growth = Math.round(((curr.site_visits - prev.site_visits) / prev.site_visits) * 100);
+          }
+        }
+        
+        setMonthlyData(processedData);
+        setStats(processedData.find(d => d.month === month) || processedData[processedData.length - 1]);
+      }
     } catch (error) {
       console.error("Error fetching analytics:", error);
+      if (DEMO_MODE) {
+        setIsUsingMockData(true);
+        const mockData = generateMockData();
+        setMonthlyData(mockData);
+        setStats(mockData.find(d => d.month_num === month) || mockData[mockData.length - 1]);
+      }
     } finally {
       setLoading(false);
     }
+  };
+
+  // Generate mock data for demo mode
+  const generateMockData = () => {
+    const mockData = [];
+    for (let m = 1; m <= 12; m++) {
+      mockData.push({
+        month: m,
+        month_num: m,
+        year: year,
+        total_revenue: Math.floor(Math.random() * 50000) + 20000,
+        orders_placed: Math.floor(Math.random() * 100) + 20,
+        site_visits: Math.floor(Math.random() * 5000) + 1000,
+        revenue_growth: Math.floor(Math.random() * 30) - 10,
+        orders_growth: Math.floor(Math.random() * 30) - 10,
+        aov_growth: Math.floor(Math.random() * 20) - 5,
+        visits_growth: Math.floor(Math.random() * 40) - 10,
+        average_order_value: Math.floor(Math.random() * 300) + 100,
+      });
+    }
+    return mockData;
+  };
+
+  const handleExport = () => {
+    if (!monthlyData || monthlyData.length === 0) return;
+    
+    const exportData = monthlyData.map(item => ({
+      Month: months[item.month - 1],
+      Year: item.year,
+      "Total Revenue": item.total_revenue,
+      "Orders Placed": item.orders_placed,
+      "Site Visits": item.site_visits,
+      "Revenue Growth (%)": item.revenue_growth,
+      "Orders Growth (%)": item.orders_growth
+    }));
+
+    exportToCSV(exportData, "analytics_overview");
   };
 
   const insights = [
@@ -303,7 +399,11 @@ export default function AnalyticsOverview() {
             <RefreshCw className="w-4 h-4" />
             Refresh
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-yellow-500 text-white rounded-xl hover:from-green-600 hover:to-yellow-600 transition-all duration-200 shadow-lg hover:shadow-xl">
+          <button 
+            onClick={handleExport}
+            disabled={loading || !monthlyData.length}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-yellow-500 text-white rounded-xl hover:from-green-600 hover:to-yellow-600 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <Download className="w-4 h-4" />
             Export Report
           </button>

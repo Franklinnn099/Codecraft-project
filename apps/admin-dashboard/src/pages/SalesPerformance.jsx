@@ -35,6 +35,7 @@ import {
   Award,
   Activity,
 } from "lucide-react";
+import { exportToCSV } from "../utils/exportUtils";
 
 ChartJS.register(
   LineElement,
@@ -48,6 +49,9 @@ ChartJS.register(
   Title
 );
 
+// Check for demo mode from environment
+const DEMO_MODE = import.meta.env.VITE_DEMO_MODE === 'true';
+
 export default function SalesPerformance() {
   const [salesData, setSalesData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -55,6 +59,7 @@ export default function SalesPerformance() {
   const [selectedPeriod, setSelectedPeriod] = useState("12months");
   const [selectedChart, setSelectedChart] = useState("line");
   const [refreshing, setRefreshing] = useState(false);
+  const [isUsingMockData, setIsUsingMockData] = useState(false);
 
   const categories = ["Chairs", "Desks", "Sofas", "Lighting", "Decor"];
 
@@ -65,32 +70,42 @@ export default function SalesPerformance() {
   const fetchSalesData = async () => {
     setLoading(true);
     setError("");
+    setIsUsingMockData(false);
 
     try {
+      // Fetch from v_monthly_analytics view (real-time data)
       const { data, error } = await supabase
-        .from("sales_metrics")
+        .from("v_monthly_analytics")
         .select("*")
         .order("month", { ascending: true });
 
       if (error) {
-        setError("Failed to load sales data: " + error.message);
+        console.error("Error fetching sales data:", error);
+        if (DEMO_MODE) {
+          setIsUsingMockData(true);
+          setSalesData(generateMockData());
+        } else {
+          setError("Failed to load sales data. No data available.");
+        }
       } else if (data && data.length > 0) {
+        // Process real data from v_monthly_analytics
         const labels = data.map((row) => {
-          const date = new Date(row.month);
-          return date.toLocaleDateString("en-US", {
-            month: "short",
-            year: "numeric",
-          });
+          const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+          return `${monthNames[row.month_num - 1]} ${row.year}`;
         });
-        const sales = data.map((row) => row.total_sales || 0);
-        const growth = data[data.length - 1]?.growth_percent || 0;
-        const categorySales = data[data.length - 1]?.category_sales || {};
+        
+        // Calculate sales based on inquiries (estimated revenue per inquiry)
+        const sales = data.map((row) => (row.inquiries || 0) * 500);
+        
+        // Calculate growth
+        const growth = sales.length >= 2 && sales[sales.length - 2] > 0
+          ? Math.round(((sales[sales.length - 1] - sales[sales.length - 2]) / sales[sales.length - 2]) * 100)
+          : 0;
 
-        // Calculate additional metrics
         const totalSales = sales.reduce((sum, val) => sum + val, 0);
-        const avgSales = totalSales / sales.length;
-        const maxSales = Math.max(...sales);
-        const minSales = Math.min(...sales);
+        const avgSales = sales.length > 0 ? totalSales / sales.length : 0;
+        const maxSales = sales.length > 0 ? Math.max(...sales) : 0;
+        const minSales = sales.length > 0 ? Math.min(...sales) : 0;
 
         setSalesData({
           labels,
@@ -110,7 +125,7 @@ export default function SalesPerformance() {
             },
           ],
           growth,
-          categorySales,
+          categorySales: {}, // Would need product-level data for category breakdown
           totalSales,
           avgSales,
           maxSales,
@@ -118,55 +133,83 @@ export default function SalesPerformance() {
           salesCount: sales.length,
         });
       } else {
-        // Generate mock data if no data exists
-        const mockLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-        const mockSales = [45000, 52000, 48000, 61000, 55000, 67000];
-        const mockCategorySales = {
-          Chairs: 25000,
-          Desks: 18000,
-          Sofas: 15000,
-          Lighting: 7000,
-          Decor: 5000,
-        };
-
-        setSalesData({
-          labels: mockLabels,
-          datasets: [
-            {
-              label: "Monthly Sales (GHS)",
-              data: mockSales,
-              fill: false,
-              borderColor: "rgb(59, 130, 246)",
-              backgroundColor: "rgba(59, 130, 246, 0.1)",
-              tension: 0.4,
-              pointBackgroundColor: "rgb(59, 130, 246)",
-              pointBorderColor: "#fff",
-              pointBorderWidth: 2,
-              pointRadius: 6,
-              pointHoverRadius: 8,
-            },
-          ],
-          growth: 12.5,
-          categorySales: mockCategorySales,
-          totalSales: mockSales.reduce((sum, val) => sum + val, 0),
-          avgSales:
-            mockSales.reduce((sum, val) => sum + val, 0) / mockSales.length,
-          maxSales: Math.max(...mockSales),
-          minSales: Math.min(...mockSales),
-          salesCount: mockSales.length,
-        });
+        // No data available
+        if (DEMO_MODE) {
+          setIsUsingMockData(true);
+          setSalesData(generateMockData());
+        } else {
+          setError("No sales data available. Start tracking events on your client site.");
+        }
       }
     } catch (err) {
-      setError("An unexpected error occurred");
+      console.error("Unexpected error:", err);
+      if (DEMO_MODE) {
+        setIsUsingMockData(true);
+        setSalesData(generateMockData());
+      } else {
+        setError("An unexpected error occurred");
+      }
     } finally {
       setLoading(false);
     }
+  };
+
+  // Generate mock data for demo mode
+  const generateMockData = () => {
+    const mockLabels = ["Jan 2025", "Feb 2025", "Mar 2025", "Apr 2025", "May 2025", "Jun 2025"];
+    const mockSales = [45000, 52000, 48000, 61000, 55000, 67000];
+    const mockCategorySales = {
+      Chairs: 25000,
+      Desks: 18000,
+      Sofas: 15000,
+      Lighting: 7000,
+      Decor: 5000,
+    };
+
+    return {
+      labels: mockLabels,
+      datasets: [
+        {
+          label: "Monthly Sales (GHS)",
+          data: mockSales,
+          fill: false,
+          borderColor: "rgb(59, 130, 246)",
+          backgroundColor: "rgba(59, 130, 246, 0.1)",
+          tension: 0.4,
+          pointBackgroundColor: "rgb(59, 130, 246)",
+          pointBorderColor: "#fff",
+          pointBorderWidth: 2,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+        },
+      ],
+      growth: 12.5,
+      categorySales: mockCategorySales,
+      totalSales: mockSales.reduce((sum, val) => sum + val, 0),
+      avgSales:
+        mockSales.reduce((sum, val) => sum + val, 0) / mockSales.length,
+      maxSales: Math.max(...mockSales),
+      minSales: Math.min(...mockSales),
+      salesCount: mockSales.length,
+    };
   };
 
   const refreshData = async () => {
     setRefreshing(true);
     await fetchSalesData();
     setRefreshing(false);
+  };
+
+  const handleExport = () => {
+    if (!salesData || !salesData.datasets || !salesData.datasets[0].data) return;
+
+    const exportData = salesData.labels.map((label, index) => ({
+      Month: label,
+      "Sales (GHS)": salesData.datasets[0].data[index],
+      "Growth (%)": index === salesData.labels.length - 1 ? salesData.growth : ""
+    }));
+
+    exportToCSV(exportData, "sales_performance");
   };
 
   const getBarChartData = () => {
@@ -313,7 +356,11 @@ export default function SalesPerformance() {
               Refresh
             </button>
 
-            <button className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-white/50 rounded-lg transition-colors">
+            <button 
+              onClick={handleExport}
+              disabled={loading || !salesData}
+              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:bg-white/50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <Download className="w-4 h-4" />
               Export
             </button>
