@@ -623,7 +623,7 @@ export default function Homepage() {
                   </div>
                   <div>
                     <p className="text-white font-bold">Premium Quality</p>
-                    <p className="text-white/60 text-xs">5-Year Warranty</p>
+                    <p className="text-white/60 text-xs">Top Rated</p>
                   </div>
                 </div>
               </div>

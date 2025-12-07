@@ -425,11 +425,13 @@ export default function Gallery() {
           {filteredProducts.map((product, index) => (
             <div
               key={product.id}
-              className={`gallery-item group relative break-inside-avoid rounded-[2rem] overflow-hidden cursor-pointer opacity-0 translate-y-10 transition-all duration-700 ease-out hover:z-10 ${
+              className={`gallery-item group relative break-inside-avoid rounded-[2rem] overflow-hidden cursor-pointer transition-all duration-700 ease-out hover:z-10 ${
                 viewMode === "masonry" ? "mb-8" : ""
               }`}
               onClick={() => openModal(product)}
-              style={{ transitionDelay: `${index * 50}ms` }}
+              style={{ 
+                animation: `fadeInUp 0.6s ease-out ${index * 50}ms both`
+              }}
             >
               {/* Image Container with Tilt Effect */}
               <div className="relative overflow-hidden bg-gray-200 aspect-[3/4] transform transition-transform duration-700 group-hover:scale-[1.02]">

@@ -95,6 +95,11 @@ export default function Sidebar({ collapsed, onToggle }) {
           path: "/contact-messages",
           icon: Mail,
         },
+        {
+          title: "Product Reviews",
+          path: "/product-reviews",
+          icon: Star,
+        },
       ],
     },
     {

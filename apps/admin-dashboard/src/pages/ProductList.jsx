@@ -403,13 +403,16 @@ export default function ProductList() {
             <p className="text-gray-600 mt-1">Manage your product inventory</p>
           </div>
           <div className="flex items-center gap-3">
-            <Link
-              to="/bulk-import"
+            <button
+              onClick={() => {
+                // Open BulkImport in the same window without navigation
+                window.open('/bulk-import', '_self');
+              }}
               className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               <Upload className="w-5 h-5" />
               Bulk Import
-            </Link>
+            </button>
             <Link
               to="/add-product"
               className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
@@ -645,7 +648,7 @@ export default function ProductList() {
                   Export
                 </button>
                 <button 
-                  onClick={() => navigate("/bulk-import")}
+                  onClick={() => window.open('/bulk-import', '_self')}
                   className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
                   <Upload className="w-4 h-4" />
                   Import

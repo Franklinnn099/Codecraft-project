@@ -141,13 +141,15 @@ export default function AdminUsersManagement() {
             <RefreshCw className="w-4 h-4" />
             Refresh
           </button>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            <UserPlus className="w-4 h-4" />
-            Add Admin
-          </button>
+          {isSuperAdmin && (
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <UserPlus className="w-4 h-4" />
+              Add Admin
+            </button>
+          )}
         </div>
       </div>
 
@@ -333,7 +335,7 @@ export default function AdminUsersManagement() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {admin.role !== "super_admin" && admin.is_active && (
+                    {isSuperAdmin && admin.role !== "super_admin" && admin.is_active && (
                       <button
                         onClick={() => handleRemoveAdmin(admin)}
                         className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
@@ -345,6 +347,11 @@ export default function AdminUsersManagement() {
                     {admin.role === "super_admin" && (
                       <span className="text-xs text-gray-400 italic">
                         Protected
+                      </span>
+                    )}
+                    {!isSuperAdmin && admin.role !== "super_admin" && (
+                      <span className="text-xs text-gray-400 italic">
+                        View only
                       </span>
                     )}
                   </td>

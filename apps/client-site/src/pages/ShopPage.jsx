@@ -88,7 +88,7 @@ const ProductCard = ({ product, index }) => {
     <Link
       to={`/products/${product.id}`}
       className={`group block h-full transition-all duration-500 ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        isVisible ? "opacity-100 translate-y-0" : "opacity-100 translate-y-0"
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

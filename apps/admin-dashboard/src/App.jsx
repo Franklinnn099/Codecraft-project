@@ -29,6 +29,7 @@ import BulkImport from "./pages/BulkImport";
 import Inquiries from "./pages/Inquiries";
 import ServiceInquiries from "./pages/ServiceInquiries";
 import ContactMessages from "./pages/ContactMessages";
+import ProductReviews from "./pages/ProductReviews";
 
 // Notifications
 import Notifications from "./pages/Notifications";
@@ -195,6 +196,14 @@ export default function App() {
               element={
                 <ProtectedLayout toggleDarkMode={toggleDarkMode} darkMode={darkMode}>
                   <ContactMessages />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/product-reviews"
+              element={
+                <ProtectedLayout toggleDarkMode={toggleDarkMode} darkMode={darkMode}>
+                  <ProductReviews />
                 </ProtectedLayout>
               }
             />

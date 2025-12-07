@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import Papa from "papaparse";
+import * as XLSX from "xlsx";
 import {
   Upload,
   Download,
@@ -43,12 +44,22 @@ export default function BulkImport() {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      if (selectedFile.type !== "text/csv" && !selectedFile.name.endsWith(".csv")) {
-        toast.error("Please upload a valid CSV file");
+      const isCSV = selectedFile.type === "text/csv" || selectedFile.name.endsWith(".csv");
+      const isExcel = selectedFile.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" || 
+                      selectedFile.name.endsWith(".xlsx") || 
+                      selectedFile.name.endsWith(".xls");
+      
+      if (!isCSV && !isExcel) {
+        toast.error("Please upload a valid CSV or Excel (.xlsx) file");
         return;
       }
       setFile(selectedFile);
-      parseCSV(selectedFile);
+      
+      if (isCSV) {
+        parseCSV(selectedFile);
+      } else {
+        parseExcel(selectedFile);
+      }
     }
   };
 
@@ -67,6 +78,31 @@ export default function BulkImport() {
         setLoading(false);
       }
     });
+  };
+
+  const parseExcel = (file) => {
+    setLoading(true);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        setPreviewData(jsonData);
+        validateData(jsonData);
+        setLoading(false);
+      } catch (error) {
+        toast.error("Error parsing Excel file: " + error.message);
+        setLoading(false);
+      }
+    };
+    reader.onerror = () => {
+      toast.error("Error reading file");
+      setLoading(false);
+    };
+    reader.readAsArrayBuffer(file);
   };
 
   const validateData = (data) => {
@@ -91,8 +127,8 @@ export default function BulkImport() {
   };
 
   const handleDownloadTemplate = () => {
-    const headers = ["Name", "Description", "Price", "Stock", "Category", "Subcategory", "SKU", "Status"];
-    const example = ["Executive Desk", "Premium wooden desk", "1200", "15", "Desks", "Executive Desks", "DSK-001", "In Stock"];
+    const headers = ["Name", "Description", "Price", "Stock", "Category", "Subcategory", "SKU", "Status", "Image"];
+    const example = ["Executive Desk", "Premium wooden desk", "1200", "15", "Desks", "Executive Desks", "DSK-001", "In Stock", "https://example.com/desk.jpg"];
     const csvContent = [headers.join(","), example.join(",")].join("\n");
     
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -126,6 +162,7 @@ export default function BulkImport() {
           status: row.Status || "In Stock",
           category_id: category?.id,
           subcategory_id: subcategory?.id,
+          image_url: row.Image || row["Image URL"] || null,
           created_at: new Date().toISOString()
         };
       });
@@ -185,6 +222,7 @@ export default function BulkImport() {
               <h3 className="font-semibold text-blue-900 mb-2">Accepted File Types</h3>
               <ul className="text-sm text-blue-800 space-y-1">
                 <li>• <strong>CSV files (.csv)</strong> - Comma-separated values</li>
+                <li>• <strong>Excel files (.xlsx, .xls)</strong> - Microsoft Excel</li>
                 <li>• UTF-8 encoding recommended</li>
                 <li>• Maximum file size: 5MB</li>
               </ul>
@@ -223,6 +261,7 @@ export default function BulkImport() {
                   <tr><td className="px-4 py-2 font-medium">Subcategory</td><td className="px-4 py-2 text-gray-500">No</td><td className="px-4 py-2">Exact match to existing</td><td className="px-4 py-2 text-gray-500">Executive Chairs</td></tr>
                   <tr><td className="px-4 py-2 font-medium">SKU</td><td className="px-4 py-2 text-gray-500">No</td><td className="px-4 py-2">Text (unique)</td><td className="px-4 py-2 text-gray-500">CHR-EXE-001</td></tr>
                   <tr><td className="px-4 py-2 font-medium">Status</td><td className="px-4 py-2 text-gray-500">No</td><td className="px-4 py-2">"In Stock" or "Out of Stock"</td><td className="px-4 py-2 text-gray-500">In Stock</td></tr>
+                  <tr><td className="px-4 py-2 font-medium">Image</td><td className="px-4 py-2 text-gray-500">No</td><td className="px-4 py-2">URL (https://...)</td><td className="px-4 py-2 text-gray-500">https://example.com/chair.jpg</td></tr>
                 </tbody>
               </table>
             </div>
@@ -253,11 +292,11 @@ export default function BulkImport() {
                 Drag & Drop or Click to Upload
               </h3>
               <p className="text-gray-500 mb-6">
-                Supported format: .csv
+                Supported formats: .csv, .xlsx, .xls
               </p>
               <input
                 type="file"
-                accept=".csv"
+                accept=".csv,.xlsx,.xls"
                 onChange={handleFileChange}
                 className="hidden"
                 id="file-upload"
@@ -343,9 +382,26 @@ export default function BulkImport() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {previewData.slice(0, 10).map((row, idx) => (
                     <tr key={idx} className={errors.find(e => e.row === idx + 1) ? "bg-red-50" : ""}>
-                      {Object.values(row).map((cell, cellIdx) => (
+                      {Object.entries(row).map(([key, cell], cellIdx) => (
                         <td key={cellIdx} className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
-                          {cell}
+                          {(key === "Image" || key === "Image URL") && cell ? (
+                            <div className="flex items-center gap-2">
+                              <img 
+                                src={cell} 
+                                alt="Preview" 
+                                className="w-8 h-8 rounded object-cover"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.nextSibling.style.display = 'block';
+                                }}
+                              />
+                              <span className="hidden text-xs text-gray-400 truncate max-w-[100px]" title={cell}>
+                                {cell}
+                              </span>
+                            </div>
+                          ) : (
+                            cell
+                          )}
                         </td>
                       ))}
                     </tr>

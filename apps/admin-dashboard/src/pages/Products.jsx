@@ -156,10 +156,10 @@ export default function Products() {
     },
     {
       title: "Bulk Import",
-      description: "Import multiple products from CSV file",
+      description: "Import multiple products from CSV or Excel file",
       icon: Package,
       color: "purple",
-      link: "/products/import",
+      link: "/bulk-import",
     },
     {
       title: "Analytics",

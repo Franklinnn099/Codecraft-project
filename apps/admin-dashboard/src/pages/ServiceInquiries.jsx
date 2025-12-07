@@ -404,12 +404,12 @@ Your trusted partner for premium office furniture solutions.`,
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent flex items-center gap-3">
               <Target className="w-8 h-8 text-blue-600" />
               Service Inquiries
             </h1>
@@ -421,10 +421,10 @@ Your trusted partner for premium office furniture solutions.`,
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Users className="w-5 h-5 text-blue-600" />
+              <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
+                <Users className="w-5 h-5 text-white" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">Total</p>
@@ -435,10 +435,10 @@ Your trusted partner for premium office furniture solutions.`,
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-yellow-100 rounded-lg">
-                <Clock className="w-5 h-5 text-yellow-600" />
+              <div className="p-3 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl shadow-lg">
+                <Clock className="w-5 h-5 text-white" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">Pending</p>
@@ -449,10 +449,10 @@ Your trusted partner for premium office furniture solutions.`,
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Phone className="w-5 h-5 text-blue-600" />
+              <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl shadow-lg">
+                <Phone className="w-5 h-5 text-white" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">Contacted</p>
@@ -463,10 +463,10 @@ Your trusted partner for premium office furniture solutions.`,
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Target className="w-5 h-5 text-purple-600" />
+              <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
+                <Target className="w-5 h-5 text-white" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">In Progress</p>
@@ -477,10 +477,10 @@ Your trusted partner for premium office furniture solutions.`,
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-orange-100 rounded-lg">
-                <FileText className="w-5 h-5 text-orange-600" />
+              <div className="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg">
+                <FileText className="w-5 h-5 text-white" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">Quoted</p>
@@ -491,10 +491,10 @@ Your trusted partner for premium office furniture solutions.`,
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircle2 className="w-5 h-5 text-green-600" />
+              <div className="p-3 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl shadow-lg">
+                <CheckCircle2 className="w-5 h-5 text-white" />
               </div>
               <div>
                 <p className="text-sm text-gray-600">Completed</p>
@@ -507,23 +507,23 @@ Your trusted partner for premium office furniture solutions.`,
         </div>
 
         {/* Filters */}
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+        <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/20 shadow-lg">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="relative">
-              <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Search className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search inquiries..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               />
             </div>
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer"
             >
               <option value="all">All Status</option>
               <option value="pending">Pending</option>
@@ -538,7 +538,7 @@ Your trusted partner for premium office furniture solutions.`,
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer"
             >
               <option value="all">All Priority</option>
               <option value="low">Low</option>
@@ -550,7 +550,7 @@ Your trusted partner for premium office furniture solutions.`,
             <select
               value={serviceTypeFilter}
               onChange={(e) => setServiceTypeFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer"
             >
               <option value="all">All Services</option>
               <option value="furniture_providers">Furniture Providers</option>
@@ -568,7 +568,7 @@ Your trusted partner for premium office furniture solutions.`,
                 setPriorityFilter("all");
                 setServiceTypeFilter("all");
               }}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-4 py-3 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-xl hover:from-gray-200 hover:to-gray-300 transition-all duration-200"
             >
               Clear Filters
             </button>
@@ -577,10 +577,10 @@ Your trusted partner for premium office furniture solutions.`,
       </div>
 
       {/* Service Inquiries Table */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">
                   Customer

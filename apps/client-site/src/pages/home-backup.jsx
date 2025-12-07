@@ -228,9 +228,9 @@ export default function Homepage() {
     },
     {
       icon: <Shield className="w-8 h-8" />,
-      title: "Lifetime Warranty",
+      title: "Quality Assurance",
       description:
-        "Comprehensive warranty coverage on all premium furniture pieces",
+        "Premium materials and craftsmanship on all furniture pieces",
       color: "from-blue-500 to-purple-500",
     },
     {

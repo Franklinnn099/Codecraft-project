@@ -130,7 +130,9 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  // Inactivity Timer
+  // Inactivity Timer - DISABLED for development
+  // TODO: Re-enable once auth is stable
+  /*
   useEffect(() => {
     if (!isAuthenticated) return;
 
@@ -139,7 +141,6 @@ export const AuthProvider = ({ children }) => {
     const logoutUser = async () => {
       console.log("Auto-logging out due to inactivity...");
       await signOut();
-      // Optionally redirect or show a message, but signOut updates state which triggers UI changes
     };
 
     const resetTimer = () => {
@@ -165,6 +166,7 @@ export const AuthProvider = ({ children }) => {
       });
     };
   }, [isAuthenticated]);
+  */
 
   // Sign in with email and password
   const signIn = async (email, password) => {
