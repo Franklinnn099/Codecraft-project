@@ -41,8 +41,14 @@ app.use(helmet({
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || CORS_ORIGINS.includes(origin)) callback(null, true);
-    else callback(new Error("Not allowed by CORS"));
+    // Allow all localhost origins for development
+    if (!origin || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+      callback(null, true);
+    } else if (CORS_ORIGINS.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
   },
   credentials: true
 }));
@@ -61,7 +67,13 @@ app.get('/', (req, res) => {
   res.json({ message: '✅ API key is valid 🎉 Backend secured & running over HTTPS!' });
 });
 
-// Apply API key protection for all /api routes
+// ------------------------
+// 📧 Email Routes (PUBLIC - no API key required)
+// ------------------------
+const emailRoutes = require('./routes/email');
+app.use('/api/email', emailRoutes);
+
+// Apply API key protection for all OTHER /api routes
 app.use('/api', requireApiKey());
 
 // Protected test route
@@ -78,28 +90,24 @@ app.post('/api/test-sanitize', (req, res) => {
 });
 
 // ------------------------
-// 6️⃣ HTTPS & HTTP Servers
+// 6️⃣ HTTP & HTTPS Servers
 // ------------------------
-let httpsOptions;
+// Start HTTP server (primary for development)
+http.createServer(app).listen(HTTP_PORT, () => {
+  console.log(`✅ HTTP server running on http://localhost:${HTTP_PORT}`);
+});
+
+// Try to start HTTPS server if certificates exist
 try {
-  httpsOptions = {
+  const httpsOptions = {
     key: fs.readFileSync(path.join(__dirname, 'cert', 'localhost-key.pem')),
     cert: fs.readFileSync(path.join(__dirname, 'cert', 'localhost.pem'))
   };
+  
+  https.createServer(httpsOptions, app).listen(HTTPS_PORT, () => {
+    console.log(`✅ HTTPS server running on https://localhost:${HTTPS_PORT}`);
+  });
 } catch (err) {
-  console.error("❌ Could not load SSL certificate/key:", err.message);
-  process.exit(1);
+  console.log(`ℹ️ HTTPS disabled (no certificates found)`);
 }
 
-// HTTPS server
-https.createServer(httpsOptions, app).listen(HTTPS_PORT, () => {
-  console.log(`✅ HTTPS server running on https://localhost:${HTTPS_PORT}`);
-});
-
-// HTTP server (redirects to HTTPS)
-http.createServer((req, res) => {
-  res.writeHead(301, { "Location": `https://localhost:${HTTPS_PORT}${req.url}` });
-  res.end();
-}).listen(HTTP_PORT, () => {
-  console.log(`ℹ️ HTTP server running on http://localhost:${HTTP_PORT} (redirects to HTTPS)`);
-});

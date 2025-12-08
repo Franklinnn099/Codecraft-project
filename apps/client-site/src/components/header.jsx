@@ -160,10 +160,24 @@ export default function Header({ forceOpaque = false }) {
 
   // Logout
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    console.log('Logout initiated...');
+    
+    // Clear state immediately for better UX
     setUser(null);
     setUserName("");
-    navigate("/login");
+    setRole("");
+    setEmailConfirmed(false);
+    setShowDropdown(false);
+    
+    try {
+      await supabase.auth.signOut();
+      console.log('Supabase signOut successful');
+    } catch (err) {
+      console.error('Logout error (continuing anyway):', err);
+    }
+    
+    // Force redirect using window.location for guaranteed navigation
+    window.location.href = "/login";
   };
 
   // Debounced global search (products & blogs)

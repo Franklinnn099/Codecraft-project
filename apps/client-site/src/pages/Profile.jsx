@@ -314,10 +314,17 @@ export default function Profile() {
         .delete()
         .eq("id", user.id);
 
-      if (deleteUserError) throw deleteUserError;
+      if (deleteUserError) {
+        console.error("Delete user data error:", deleteUserError);
+        // Continue with signout even if database delete fails
+      }
 
       // Sign out the user
-      await supabase.auth.signOut();
+      const { error: signOutError } = await supabase.auth.signOut();
+      
+      if (signOutError) {
+        console.error("Sign out error:", signOutError);
+      }
 
       setMessage(
         "Account data deleted successfully. You will be redirected to home page."
@@ -327,7 +334,18 @@ export default function Profile() {
         navigate("/");
       }, 2000);
     } catch (error) {
+      console.error("Delete account error:", error);
       setError("Failed to delete account: " + error.message);
+      
+      // Still try to sign out even if delete failed
+      try {
+        await supabase.auth.signOut();
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } catch (signOutErr) {
+        console.error("Sign out after delete error:", signOutErr);
+      }
     } finally {
       setLoading(false);
     }

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"> <!-- utf-8 works for most cases -->
+    <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
+    <title>Welcome to Expert Office Furnish</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
+    <style type="text/css">
+        /* Reset styles */ 
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+        
+        /* Main styles */
+        body {
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            background-color: #f3f4f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #16a34a 0%, #ca8a04 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .header p {
+            color: rgba(255,255,255,0.9);
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        /* Body */
+        .content {
+            padding: 40px 30px;
+            color: #374151;
+            line-height: 1.6;
+        }
+        
+        .greeting {
+            font-size: 22px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 20px;
+        }
+        
+        .message-box {
+            background-color: #f0fdf4;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 4px solid #16a34a;
+        }
+
+        /* CTA Button */
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            background-color: #1f2937; /* Dark elegant */
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: #f9fafb;
+            padding: 24px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 13px;
+        }
+        
+        .social-link {
+            color: #16a34a;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <!-- You can enable image logo if you host it -->
+            <!-- <img src="https://your-website.com/logo.png" width="80" alt="Logo" style="margin-bottom:15px;"> -->
+            <h1>Welcome to the Family! 🎉</h1>
+            <p>Transforming Workspaces, Elevating Excellence</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="greeting">Hello {{to_name}},</div>
+            
+            <p>Congratulations! Your account has been successfully created.</p>
+            
+            <p>We are thrilled to welcome you to <strong>Expert Office Furnish</strong>. You have taken the first step towards creating a workspace that inspires success.</p>
+            
+            <div class="message-box">
+                <p style="margin:0; font-weight:600; color:#166534">Your Member Benefits:</p>
+                <ul style="margin-top:10px; padding-left:20px;">
+                    <li>Exclusive access to premium collections</li>
+                    <li>Priority workspace consultation</li>
+                    <li>Early notifications on new arrivals</li>
+                </ul>
+            </div>
+            
+            <p style="text-align: center;">
+                <a href="https://expertofficefurnish.com/collections" class="btn">Browse Collections</a>
+            </p>
+            
+            <p style="margin-top: 30px;">
+                Required: Please check your inbox for a specific "<strong>Email Confirmation</strong>" link to activate your full account access.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2025 Expert Office Furnish. All rights reserved.</p>
+            <p>
+                <a href="#" class="social-link">Instagram</a> • 
+                <a href="#" class="social-link">Twitter</a> • 
+                <a href="#" class="social-link">LinkedIn</a>
+            </p>
+            <p>Accra, Ghana</p>
+        </div>
+    </div>
+
+</body>
+</html>

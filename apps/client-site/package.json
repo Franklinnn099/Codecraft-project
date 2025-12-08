@@ -11,6 +11,7 @@
     "optimize-images": "node vite-plugin-sharp.js"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@supabase/supabase-js": "^2.53.0",
     "chart.js": "^4.4.1",
     "lodash": "^4.17.21",

@@ -22,6 +22,7 @@
     "express-sslify": "^1.2.0",
     "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
+    "nodemailer": "^7.0.11",
     "xss": "^1.0.15",
     "xss-clean": "^0.1.4",
     "zod": "^4.0.17"
