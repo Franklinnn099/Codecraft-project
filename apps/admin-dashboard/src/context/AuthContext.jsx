@@ -20,16 +20,15 @@ export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
-  // Check if user is in admin_users table - simplified with fail-open behavior
+  // Check if user is in admin_users table - FAIL-CLOSED for security
   const checkAdminStatus = async (email) => {
     console.log('Checking admin status for:', email);
     
-    // Create a timeout promise that resolves after 5 seconds
-    const timeoutPromise = new Promise((resolve) => 
+    // Create a timeout promise that rejects after 10 seconds
+    const timeoutPromise = new Promise((_, reject) => 
       setTimeout(() => {
-        console.log('Admin check timed out, using fail-open');
-        resolve({ data: null, error: { message: 'Timeout' } });
-      }, 5000)
+        reject(new Error('Admin check timed out'));
+      }, 10000)
     );
 
     try {
@@ -44,7 +43,12 @@ export const AuthProvider = ({ children }) => {
       const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
 
       if (error) {
-        console.warn("Admin check query error:", error);
+        console.error("Admin check query error:", error);
+        // FAIL-CLOSED: Deny access on error
+        setAdminUser(null);
+        setIsAdmin(false);
+        setIsSuperAdmin(false);
+        return false;
       }
 
       if (data) {
@@ -56,14 +60,19 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Admin check exception:', error);
+      // FAIL-CLOSED: Deny access on exception
+      setAdminUser(null);
+      setIsAdmin(false);
+      setIsSuperAdmin(false);
+      return false;
     }
 
-    // Fail-open: If query fails or no data, still allow access for development
-    console.log('Allowing admin access (fail-open mode)');
-    setAdminUser({ email, role: 'admin', display_name: email.split('@')[0] });
-    setIsAdmin(true);
+    // FAIL-CLOSED: No data found = deny access
+    console.log('Admin access denied - user not in admin_users table');
+    setAdminUser(null);
+    setIsAdmin(false);
     setIsSuperAdmin(false);
-    return true;
+    return false;
   };
 
   // Initialize auth state

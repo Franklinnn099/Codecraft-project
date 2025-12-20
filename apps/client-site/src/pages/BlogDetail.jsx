@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import DOMPurify from "dompurify";
 import { supabase } from "../supabase/supabaseClient";
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -465,9 +466,12 @@ export default function BlogDetail() {
               <div
                 className="prose prose-lg max-w-none"
                 dangerouslySetInnerHTML={{
-                  __html: `<p class="text-gray-700 leading-relaxed mb-6 text-lg">${formatContent(
-                    blog.content
-                  )}</p>`,
+                  __html: DOMPurify.sanitize(
+                    `<p class="text-gray-700 leading-relaxed mb-6 text-lg">${formatContent(
+                      blog.content
+                    )}</p>`,
+                    { ADD_ATTR: ['class', 'id'] }
+                  ),
                 }}
               />
 

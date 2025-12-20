@@ -10,7 +10,24 @@ frontend/build/
 # Environment variables
 .env
 .env.bak
+.env.local
+.env.*.local
 
 # Certificates
 backend/cert/
 backend/certs/
+
+# Test files with credentials (may contain hardcoded keys)
+test-connection.js
+apps/**/test-connection.js
+
+# Sensitive files
+*.pem
+*.key
+logo-base64.txt
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

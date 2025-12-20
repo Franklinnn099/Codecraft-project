@@ -39,12 +39,17 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow all localhost origins for development
-    if (!origin || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+    // In development, allow localhost origins
+    if (isDev && (!origin || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1'))) {
       callback(null, true);
     } else if (CORS_ORIGINS.includes(origin)) {
+      callback(null, true);
+    } else if (!origin && isDev) {
+      // Allow requests with no origin in dev (e.g., curl)
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
@@ -53,10 +58,13 @@ app.use(cors({
   credentials: true
 }));
 
+// Global rate limiter
 app.use(rateLimit({
   windowMs: Number(process.env.RATE_LIMIT_WINDOW_MIN || 15) * 60 * 1000,
   max: Number(process.env.RATE_LIMIT_MAX || 100),
-  message: { error: "Too many requests, please try again later." }
+  message: { error: "Too many requests, please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
 }));
 
 // ------------------------
@@ -68,10 +76,18 @@ app.get('/', (req, res) => {
 });
 
 // ------------------------
-// 📧 Email Routes (PUBLIC - no API key required)
+// 📧 Email Routes (PUBLIC - with stricter rate limiting)
 // ------------------------
+const emailRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 emails per 15 min per IP
+  message: { error: "Too many email requests, please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 const emailRoutes = require('./routes/email');
-app.use('/api/email', emailRoutes);
+app.use('/api/email', emailRateLimiter, emailRoutes);
 
 // Apply API key protection for all OTHER /api routes
 app.use('/api', requireApiKey());

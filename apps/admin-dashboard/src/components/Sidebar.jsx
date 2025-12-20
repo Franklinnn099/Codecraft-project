@@ -179,33 +179,40 @@ export default function Sidebar({ collapsed, onToggle }) {
         <div key={item.title} className="mb-2">
           <button
             onClick={() => !collapsed && item.setIsOpen(!item.isOpen)}
-            className={`flex items-center w-full p-3 rounded-xl transition-all duration-200 group hover:bg-white/10 backdrop-blur-sm ${
-              item.isOpen ? "bg-white/20 shadow-lg" : ""
+            className={`relative flex items-center w-full p-3 rounded-2xl transition-all duration-300 group overflow-hidden ${
+              item.isOpen 
+                ? "bg-white/10 dark:bg-white/5 shadow-inner" 
+                : "hover:bg-white/50 dark:hover:bg-white/5"
             }`}
           >
             <item.icon
               className={`${collapsed ? "w-6 h-6" : "w-5 h-5"} ${
                 item.color
-              } transition-all duration-200 group-hover:scale-110`}
+              } transition-transform duration-300 group-hover:scale-110 relative z-10`}
             />
             {!collapsed && (
               <>
-                <span className="ml-3 font-medium text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white">
+                <span className="ml-3 font-semibold text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white relative z-10">
                   {item.title}
                 </span>
-                <div className="ml-auto">
+                <div className="ml-auto relative z-10">
                   {item.isOpen ? (
-                    <ChevronUp className="w-4 h-4 text-gray-500 transition-transform duration-200" />
+                    <ChevronUp className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-transform duration-200" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-gray-500 transition-transform duration-200" />
+                    <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-transform duration-200" />
                   )}
                 </div>
               </>
             )}
+            {/* Hover Glow Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
           </button>
 
           {item.isOpen && !collapsed && (
-            <div className="mt-2 ml-4 space-y-1 border-l-2 border-gray-200 dark:border-gray-600 pl-4">
+            <div className="mt-2 ml-4 space-y-1 relative pl-4">
+              {/* Connector Line */}
+              <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-gray-200 to-transparent dark:from-gray-700 rounded-full"></div>
+              
               {item.subItems
                 .filter(subItem => !subItem.superAdminOnly || isSuperAdmin)
                 .map((subItem) => (
@@ -213,15 +220,20 @@ export default function Sidebar({ collapsed, onToggle }) {
                   key={subItem.path}
                   to={subItem.path}
                   className={({ isActive }) =>
-                    `flex items-center p-2 rounded-lg transition-all duration-200 group ${
+                    `flex items-center p-2 rounded-xl transition-all duration-300 group relative overflow-hidden ${
                       isActive
-                        ? "bg-gradient-to-r from-green-500 to-yellow-500 text-white shadow-lg transform scale-105"
-                        : "hover:bg-white/10 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                        ? "bg-gradient-to-r from-green-500/10 to-transparent text-green-600 dark:text-green-400 font-bold translate-x-1"
+                        : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800/50"
                     }`
                   }
                 >
-                  <subItem.icon className="w-4 h-4 mr-3 transition-all duration-200 group-hover:scale-110" />
-                  <span className="text-sm font-medium">{subItem.title}</span>
+                  <subItem.icon className={`w-4 h-4 mr-3 transition-transform duration-300 ${
+                    location.pathname === subItem.path ? "scale-110 rotate-3" : "group-hover:scale-110"
+                  }`} />
+                  <span className="text-sm">{subItem.title}</span>
+                  {location.pathname === subItem.path && (
+                    <div className="absolute left-0 w-1 h-4 bg-green-500 rounded-full"></div>
+                  )}
                 </NavLink>
               ))}
             </div>
@@ -235,19 +247,24 @@ export default function Sidebar({ collapsed, onToggle }) {
         key={item.path}
         to={item.path}
         className={({ isActive }) =>
-          `flex items-center p-3 mb-2 rounded-xl transition-all duration-200 group ${
+          `group relative flex items-center p-3 mb-2 rounded-2xl transition-all duration-300 ${
             isActive
-              ? "bg-gradient-to-r from-green-500 to-yellow-500 text-white shadow-lg transform scale-105"
-              : "hover:bg-white/10 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
+              ? "bg-gradient-to-r from-green-600 to-yellow-500 text-white shadow-lg shadow-green-500/20 transform scale-[1.02]"
+              : "hover:bg-white/50 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
           }`
         }
       >
         <item.icon
           className={`${collapsed ? "w-6 h-6" : "w-5 h-5"} ${
             item.color
-          } transition-all duration-200 group-hover:scale-110`}
+          } ${location.pathname === item.path ? "text-white" : ""} transition-transform duration-300 group-hover:scale-110 relative z-10`}
         />
-        {!collapsed && <span className="ml-3 font-medium">{item.title}</span>}
+        {!collapsed && <span className="ml-3 font-semibold relative z-10">{item.title}</span>}
+        
+        {/* Active Item Shine */}
+        {location.pathname === item.path && (
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-30 animate-shine-slow"></div>
+        )}
       </NavLink>
     );
   };
@@ -263,79 +280,108 @@ export default function Sidebar({ collapsed, onToggle }) {
       )}
 
       <aside
-        className={`fixed top-0 left-0 h-screen bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg shadow-2xl transition-all duration-300 z-50 
-          ${collapsed ? "-translate-x-full lg:translate-x-0 lg:w-20" : "translate-x-0 w-64"}
+        className={`fixed top-4 left-4 bottom-4 rounded-[2rem] bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-all duration-500 ease-spring z-50 flex flex-col overflow-hidden
+          ${collapsed ? "-translate-x-[150%] lg:translate-x-0 lg:w-24" : "translate-x-0 w-72"}
         `}
       >
       {/* Header */}
       <div
-        className={`flex items-center gap-3 p-6 border-b border-gray-200 dark:border-gray-700 ${
+        className={`relative flex items-center gap-4 p-6 mb-2 ${
           collapsed ? "justify-center" : ""
         }`}
       >
-        {!collapsed ? (
-          <>
-            <div className="relative">
-              <img
-                src="/pics/Company logo.png"
-                alt="Logo"
-                className="h-10 w-10 object-cover rounded-xl shadow-lg"
-              />
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-yellow-400 rounded-full animate-pulse"></div>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-bold bg-gradient-to-r from-green-600 to-yellow-600 bg-clip-text text-transparent">
-                Expert Office Furnish
-              </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                Admin Panel
-              </span>
-            </div>
-          </>
-        ) : (
-          <div className="relative">
-            <img
-              src="/pics/Company logo.png"
-              alt="Logo"
-              className="h-10 w-10 object-cover rounded-xl shadow-lg"
-            />
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-yellow-400 rounded-full animate-pulse"></div>
+        <div className="relative group cursor-pointer">
+           <div className={`absolute -inset-2 bg-gradient-to-r from-green-500 to-yellow-500 rounded-full blur opacity-20 group-hover:opacity-40 transition duration-500 ${collapsed ? "w-14 h-14" : "w-14 h-14"}`}></div>
+           <img
+            src="/pics/Company logo.png"
+            alt="Logo"
+            className="relative h-12 w-12 object-cover rounded-2xl shadow-sm transition-transform duration-500 group-hover:rotate-6"
+           />
+           <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-gray-900 rounded-full animate-pulse z-10"></div>
+        </div>
+
+        {!collapsed && (
+          <div className="flex flex-col animate-fadeIn">
+            <h1 className="text-xl font-black tracking-tight bg-gradient-to-r from-green-600 to-yellow-500 bg-clip-text text-transparent">
+              Expert<br/>Office.
+            </h1>
+            <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">
+              Admin Panel
+            </span>
           </div>
         )}
       </div>
 
       {/* Navigation */}
-      <nav className="p-4 space-y-2 overflow-y-auto h-[calc(100vh-140px)]">
+      <nav className="flex-1 px-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-700 hover:scrollbar-thumb-gray-300 pb-20">
         {menuItems.map(renderNavItem)}
       </nav>
 
-      {/* Footer */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
-        <div
-          className={`flex items-center gap-3 ${
-            collapsed ? "justify-center" : ""
-          }`}
-        >
-          <button
-            onClick={onToggle}
-            className="p-2 rounded-xl bg-gradient-to-r from-green-500 to-yellow-500 text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
-          >
-            <Menu className="w-4 h-4" />
-          </button>
-          {!collapsed && (
-            <button 
-              onClick={async () => {
-                await signOut();
-                navigate('/login');
-              }}
-              className="flex items-center gap-2 p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-all duration-200 hover:scale-105"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="text-sm font-medium">Sign Out</span>
-            </button>
-          )}
+      {/* Footer / Actions */}
+      <div className="p-4 bg-gradient-to-t from-white/50 to-transparent dark:from-black/20">
+        <div className={`flex flex-col gap-3 ${collapsed ? "items-center" : ""}`}>
+           
+           {/* Visit Site Button - Creative Style */}
+           {!collapsed ? (
+               <button 
+                  onClick={() => window.location.href = "http://localhost:5001"}
+                  className="group relative w-full overflow-hidden p-3 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-bold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:-translate-y-1"
+               >
+                   <div className="flex items-center justify-center gap-2 relative z-10">
+                       <Globe className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                       <span>Live Site</span>
+                   </div>
+                   <div className="absolute inset-0 bg-blue-100 dark:bg-blue-800/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+               </button>
+           ) : (
+             <button 
+                onClick={() => window.location.href = "http://localhost:5001"}
+                className="p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 hover:scale-110 transition-transform"
+                title="Visit Live Site"
+             >
+                <Globe className="w-5 h-5" />
+             </button>
+           )}
+
+           <div className="h-[1px] bg-gray-200 dark:bg-gray-700 w-full my-1"></div>
+
+           {/* User & Logout Group */}
+           <div className={`flex items-center gap-3 ${collapsed ? "flex-col" : "justify-between"}`}>
+              {!collapsed && (
+                  <div className="flex items-center gap-2 overflow-hidden">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-gray-200 to-gray-300 flex items-center justify-center text-xs font-bold text-gray-600">
+                         {adminUser?.email?.[0]?.toUpperCase() || 'A'}
+                      </div>
+                      <div className="flex flex-col">
+                          <span className="text-xs font-bold text-gray-700 dark:text-gray-200 truncate max-w-[100px]">
+                             {adminUser?.email?.split('@')[0] || 'Admin'}
+                          </span>
+                          <span className="text-[10px] text-gray-400">Online</span>
+                      </div>
+                  </div>
+              )}
+              
+              <button 
+                onClick={onToggle}
+                className="lg:hidden p-2 text-gray-400 hover:text-gray-600"
+              >
+                  <Menu className="w-5 h-5" />
+              </button>
+
+              <button 
+                onClick={async () => {
+                  await signOut();
+                  navigate('/login');
+                }}
+                className={`p-2 rounded-xl text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300 ${!collapsed ? "ml-auto" : ""}`}
+                title="Sign Out"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
+           </div>
         </div>
       </div>
+
     </aside>
     </>
   );

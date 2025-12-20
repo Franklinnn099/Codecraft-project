@@ -203,7 +203,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 text-gray-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50 text-gray-900 relative overflow-x-hidden">
       {/* Floating Background Elements */}
       <div className="fixed inset-0 pointer-events-none z-0 opacity-20">
         <div className="absolute top-20 right-10 w-32 h-32 bg-gradient-to-r from-yellow-400 to-green-400 rounded-full blur-3xl animate-pulse"></div>
@@ -211,9 +211,9 @@ export default function SignupPage() {
         <div className="absolute bottom-40 right-1/4 w-24 h-24 bg-gradient-to-r from-yellow-300 to-green-300 rounded-full blur-2xl animate-bounce"></div>
       </div>
 
-      <Header />
+      <Header forceOpaque={true} />
       <main
-        className={`relative z-10 flex items-center justify-center px-4 py-20 transition-all duration-700 ${
+        className={`relative z-10 flex items-center justify-center px-4 pt-32 pb-20 transition-all duration-700 ${
           isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
         }`}
       >
