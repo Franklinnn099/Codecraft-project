@@ -24,6 +24,7 @@ jobs:
           cd apps/client-site
           npm install
           npm run build
+          mv dist ftp_dist
           
       - name: FTP Deploy to Hostinger
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -31,8 +32,8 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          # This deploys the built frontend files
-          local-dir: apps/client-site/dist/
+          # This deploys the built frontend files from the uniquely named folder to bypass .gitignore
+          local-dir: apps/client-site/ftp_dist/
           # Deploy to Hostinger's standard public directory. Change if necessary.
           server-dir: public_html/
 
