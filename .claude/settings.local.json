@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(grep -r \"multer\\\\|upload\\\\|csv\\\\|xlsx\" \"/c/Users/USER/Desktop/Projects/Expert Office Furnish/Expert-office-Furnish-final/backend\" --include=\"*.js\" ! -path \"*/node_modules/*\")"
-    ]
-  }
-}
