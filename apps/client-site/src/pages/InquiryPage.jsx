@@ -367,7 +367,7 @@ export default function ProductInquiry() {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-800">Email Us</p>
-                    <p className="text-yellow-600">info@expertoffice.com</p>
+                    <p className="text-yellow-600">expertofurnish@gmail.com</p>
                   </div>
                 </div>
 

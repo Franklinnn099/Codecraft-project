@@ -16,7 +16,7 @@ serve(async (req) => {
     const { inquiryData, inquiryType } = await req.json()
     
     // Company email - replace with actual company email
-    const companyEmail = 'info@expertoffice.com' // Change this to actual company email
+    const companyEmail = 'expertofurnish@gmail.com' // Company email for receiving notifications
     
     // Create email content based on inquiry type
     let emailSubject: string
@@ -77,7 +77,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Expert Office Furnish <noreply@expertoffice.com>', // Use your domain
+        from: 'Expert Office Furnish <expertofurnish@gmail.com>',
         to: [companyEmail],
         subject: emailSubject,
         html: emailBody,

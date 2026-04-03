@@ -32,6 +32,7 @@ import {
   MessageSquare,
   Mail,
   Crown,
+  Upload,
 } from "lucide-react";
 
 export default function Sidebar({ collapsed, onToggle }) {
@@ -73,6 +74,7 @@ export default function Sidebar({ collapsed, onToggle }) {
         { title: "All Products", path: "/products", icon: Box },
         { title: "Product List", path: "/product-list", icon: List },
         { title: "Add Product", path: "/add-product", icon: UserPlus },
+        { title: "Bulk Import", path: "/bulk-import", icon: Upload },
         { title: "Categories", path: "/categories", icon: Tag },
       ],
     },

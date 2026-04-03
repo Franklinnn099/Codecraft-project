@@ -3,8 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 // Email credentials - use env vars or fallback to configured values
-const EMAIL_USER = process.env.EMAIL_USER || 'franklinasarewiafe@gmail.com';
-const EMAIL_PASS = process.env.EMAIL_PASS || 'soet wkiw ezbz tfkt';
+// IMPORTANT: Set EMAIL_USER and EMAIL_PASS environment variables for production
+const EMAIL_USER = process.env.EMAIL_USER || 'expertofurnish@gmail.com';
+const EMAIL_PASS = process.env.EMAIL_PASS || ''; // Set this via environment variable
 
 // Load company logo as base64 for email embedding
 let COMPANY_LOGO_BASE64 = '';
@@ -47,7 +48,7 @@ async function sendWelcomeEmail(customerEmail, customerName) {
       address: EMAIL_USER,
     },
     to: customerEmail,
-    subject: '🎉 Welcome to Expert Office Furnish! Your Workspace Journey Begins',
+    subject: 'Welcome to Expert Office Furnish',
     html: generateWelcomeEmailHTML(customerName, logoExists),
     text: generateWelcomeEmailText(customerName),
     attachments: logoExists ? [
@@ -76,8 +77,8 @@ async function sendWelcomeEmail(customerEmail, customerName) {
  * @returns {string} - HTML email content
  */
 function generateWelcomeEmailHTML(customerName, hasLogo = true) {
-  // Use CID reference for embedded image, fallback to placeholder
-  const logoSrc = hasLogo ? 'cid:companylogo' : 'https://via.placeholder.com/120x120/16a34a/ffffff?text=EOF';
+  const logoSrc = hasLogo ? 'cid:companylogo' : '';
+  const currentYear = new Date().getFullYear();
   
   return `
 <!DOCTYPE html>
@@ -87,116 +88,112 @@ function generateWelcomeEmailHTML(customerName, hasLogo = true) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome to Expert Office Furnish</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f8f9fa; padding: 40px 20px;">
+<body style="margin: 0; padding: 0; background-color: #f5f5f5; font-family: Georgia, 'Times New Roman', serif;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f5f5f5; padding: 40px 20px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden;">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border: 1px solid #e0e0e0;">
           
-          <!-- Header with Logo -->
+          <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, #16a34a 0%, #22c55e 50%, #84cc16 100%); padding: 50px 30px; text-align: center;">
-              <!-- Company Logo -->
-              <div style="margin: 0 auto 20px;">
-                <img src="${logoSrc}" alt="Expert Office Furnish Logo" width="140" height="140" style="border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.2); background: #ffffff; padding: 8px;" />
-              </div>
-              <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+            <td style="background-color: #1a472a; padding: 30px; text-align: center;">
+              ${hasLogo ? `<img src="${logoSrc}" alt="Expert Office Furnish" width="80" height="80" style="margin-bottom: 15px; border-radius: 8px;" />` : ''}
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: normal; letter-spacing: 1px;">
                 Expert Office Furnish
               </h1>
-              <p style="color: #d9f99d; margin-top: 10px; font-size: 16px; letter-spacing: 1px; font-weight: 500;">
-                Transforming Workspaces, Elevating Excellence
+              <p style="color: #c9a227; margin: 8px 0 0 0; font-size: 13px; letter-spacing: 2px; text-transform: uppercase;">
+                Premium Office Solutions
               </p>
-            </td>
-          </tr>
-
-          <!-- Welcome Banner -->
-          <tr>
-            <td style="background: linear-gradient(135deg, #eab308 0%, #facc15 100%); padding: 20px; text-align: center;">
-              <span style="color: #1a1a2e; font-size: 18px; font-weight: 700; letter-spacing: 2px;">
-                🎉 CONGRATULATIONS ON JOINING US! 🎉
-              </span>
             </td>
           </tr>
 
           <!-- Main Content -->
           <tr>
-            <td style="padding: 50px 40px;">
-              <h2 style="color: #1f2937; font-size: 28px; margin: 0 0 20px 0; text-align: center;">
-                Hello, ${customerName || 'Valued Customer'}! 👋
-              </h2>
-
-              <p style="color: #4b5563; font-size: 17px; line-height: 1.9; text-align: center; margin-bottom: 35px;">
-                Welcome to the <strong style="color: #16a34a;">Expert Office Furnish</strong> family! 
-                We're excited to have you on board. Get ready to transform your workspace with our premium collection of office furniture.
+            <td style="padding: 45px 40px;">
+              <p style="color: #333333; font-size: 16px; line-height: 1.8; margin: 0 0 25px 0;">
+                Dear ${customerName || 'Valued Customer'},
               </p>
 
-              <!-- Benefits Grid -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 35px;">
+              <p style="color: #333333; font-size: 16px; line-height: 1.8; margin: 0 0 25px 0;">
+                Thank you for creating an account with Expert Office Furnish. We are pleased to welcome you to our community of discerning professionals who understand the value of a well-designed workspace.
+              </p>
+
+              <p style="color: #333333; font-size: 16px; line-height: 1.8; margin: 0 0 25px 0;">
+                Since 2015, we have been helping businesses across Ghana create productive, comfortable, and inspiring work environments. From executive desks to ergonomic seating, our curated collection represents the finest in office furniture.
+              </p>
+
+              <h3 style="color: #1a472a; font-size: 18px; margin: 35px 0 20px 0; font-weight: normal; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;">
+                What We Offer
+              </h3>
+
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 30px;">
                 <tr>
-                  <td style="padding: 12px;">
-                    <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 16px; padding: 28px; text-align: center; border: 2px solid #10b981;">
-                      <div style="font-size: 40px; margin-bottom: 12px;">🪑</div>
-                      <h3 style="color: #065f46; margin: 0 0 10px 0; font-size: 18px; font-weight: 700;">Premium Quality</h3>
-                      <p style="color: #047857; margin: 0; font-size: 14px; line-height: 1.6;">Handcrafted furniture designed for comfort and durability</p>
-                    </div>
+                  <td style="padding: 8px 0; color: #555555; font-size: 15px;">
+                    <strong style="color: #1a472a;">Executive Furniture</strong> — Desks, chairs, and storage solutions
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px;">
-                    <div style="background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%); border-radius: 16px; padding: 28px; text-align: center; border: 2px solid #eab308;">
-                      <div style="font-size: 40px; margin-bottom: 12px;">🚚</div>
-                      <h3 style="color: #854d0e; margin: 0 0 10px 0; font-size: 18px; font-weight: 700;">Express Delivery</h3>
-                      <p style="color: #a16207; margin: 0; font-size: 14px; line-height: 1.6;">Fast and reliable shipping across Ghana</p>
-                    </div>
+                  <td style="padding: 8px 0; color: #555555; font-size: 15px;">
+                    <strong style="color: #1a472a;">Office Fitouts</strong> — Complete workspace design and installation
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding: 12px;">
-                    <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 16px; padding: 28px; text-align: center; border: 2px solid #22c55e;">
-                      <div style="font-size: 40px; margin-bottom: 12px;">💼</div>
-                      <h3 style="color: #166534; margin: 0 0 10px 0; font-size: 18px; font-weight: 700;">Business Solutions</h3>
-                      <p style="color: #15803d; margin: 0; font-size: 14px; line-height: 1.6;">Complete office setup & consultation services</p>
-                    </div>
+                  <td style="padding: 8px 0; color: #555555; font-size: 15px;">
+                    <strong style="color: #1a472a;">Consultation Services</strong> — Expert advice for your office needs
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #555555; font-size: 15px;">
+                    <strong style="color: #1a472a;">Bulk Orders</strong> — Special pricing for corporate clients
                   </td>
                 </tr>
               </table>
 
+              <p style="color: #333333; font-size: 16px; line-height: 1.8; margin: 0 0 30px 0;">
+                Browse our collection at your convenience, and do not hesitate to reach out if you have any questions. Our team is ready to assist you in finding the perfect solutions for your workspace.
+              </p>
+
               <!-- CTA Button -->
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td align="center" style="padding: 25px 0;">
-                    <a href="https://www.expertofficefurnish.com/shop" style="background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%); color: #ffffff; text-decoration: none; padding: 18px 50px; border-radius: 50px; font-weight: 700; font-size: 18px; display: inline-block; box-shadow: 0 6px 25px rgba(22, 163, 74, 0.4); letter-spacing: 0.5px;">
-                      🛒 Explore Our Collection
+                  <td align="center" style="padding: 15px 0;">
+                    <a href="https://www.expertofficefurnish.com/shop" style="background-color: #1a472a; color: #ffffff; text-decoration: none; padding: 14px 35px; font-size: 14px; letter-spacing: 1px; display: inline-block;">
+                      VIEW OUR COLLECTION
                     </a>
                   </td>
                 </tr>
               </table>
 
-              <!-- Promo Banner -->
-              <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; padding: 20px; text-align: center; margin-top: 20px; border: 2px dashed #f59e0b;">
-                <p style="color: #92400e; margin: 0; font-size: 15px; font-weight: 600;">
-                  🎁 NEW MEMBER PERK: Get exclusive first-time buyer discounts!
-                </p>
-              </div>
+              <p style="color: #333333; font-size: 16px; line-height: 1.8; margin: 35px 0 0 0;">
+                Warm regards,
+              </p>
+              <p style="color: #333333; font-size: 16px; line-height: 1.8; margin: 5px 0 0 0;">
+                <strong>The Expert Office Furnish Team</strong>
+              </p>
             </td>
           </tr>
 
-          <!-- Footer Section -->
+          <!-- Footer -->
           <tr>
-            <td style="background: linear-gradient(135deg, #1f2937 0%, #111827 100%); padding: 35px 30px; text-align: center;">
-              <p style="color: #f3f4f6; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">
-                Expert Office Furnish
-              </p>
-              <p style="color: #9ca3af; margin: 0 0 20px 0; font-size: 14px;">
-                📍 Accra, Ghana | 📧 info@expertofficefurnish.com
-              </p>
-              <div style="margin-bottom: 20px;">
-                <a href="#" style="color: #22c55e; text-decoration: none; margin: 0 12px; font-size: 14px; font-weight: 500;">Facebook</a>
-                <a href="#" style="color: #22c55e; text-decoration: none; margin: 0 12px; font-size: 14px; font-weight: 500;">Instagram</a>
-                <a href="#" style="color: #22c55e; text-decoration: none; margin: 0 12px; font-size: 14px; font-weight: 500;">Twitter</a>
-              </div>
-              <p style="color: #6b7280; margin: 0; font-size: 12px;">
-                © 2024 Expert Office Furnish Ltd. All rights reserved.
+            <td style="background-color: #f9f9f9; padding: 25px 40px; border-top: 1px solid #e0e0e0;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td style="color: #666666; font-size: 13px; line-height: 1.6;">
+                    <strong style="color: #1a472a;">Expert Office Furnish Ltd.</strong><br>
+                    Accra, Ghana<br>
+                    Tel: +233 XX XXX XXXX<br>
+                    Email: expertofurnish@gmail.com
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Copyright -->
+          <tr>
+            <td style="background-color: #1a472a; padding: 15px; text-align: center;">
+              <p style="color: #999999; margin: 0; font-size: 11px;">
+                © ${currentYear} Expert Office Furnish Ltd. All rights reserved.
               </p>
             </td>
           </tr>
@@ -217,23 +214,28 @@ function generateWelcomeEmailHTML(customerName, hasLogo = true) {
  */
 function generateWelcomeEmailText(customerName) {
   return `
-Welcome to Expert Office Furnish!
+Dear ${customerName || 'Valued Customer'},
 
-Hello, ${customerName || 'Valued Customer'}!
+Thank you for creating an account with Expert Office Furnish. We are pleased to welcome you to our community of discerning professionals who understand the value of a well-designed workspace.
 
-Congratulations on joining the Expert Office Furnish family! We're absolutely thrilled to have you with us.
+Since 2015, we have been helping businesses across Ghana create productive, comfortable, and inspiring work environments. From executive desks to ergonomic seating, our curated collection represents the finest in office furniture.
 
-What you can expect:
-✓ Premium Quality - Handpicked furniture that combines style with comfort
-✓ Fast Delivery - Quick and reliable shipping right to your doorstep  
-✓ 24/7 Support - Our team is always here to help you
+WHAT WE OFFER:
+- Executive Furniture: Desks, chairs, and storage solutions
+- Office Fitouts: Complete workspace design and installation
+- Consultation Services: Expert advice for your office needs
+- Bulk Orders: Special pricing for corporate clients
 
-Transform your workspace with our curated collection of ergonomic chairs, elegant desks, and modern office accessories.
+Browse our collection at: https://www.expertofficefurnish.com/shop
 
-Visit us: https://expertoffice-furnish.com
+Warm regards,
+The Expert Office Furnish Team
 
 ---
-© 2024 Expert Office Furnish. All rights reserved.
+Expert Office Furnish Ltd.
+Accra, Ghana
+Tel: +233 XX XXX XXXX
+Email: expertofurnish@gmail.com
   `.trim();
 }
 

@@ -14,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { supabase } from "../supabase/supabaseClient";
 import debounce from "lodash.debounce";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Header({ forceOpaque = false }) {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -330,6 +331,9 @@ export default function Header({ forceOpaque = false }) {
                 </div>
               )}
             </div>
+
+            {/* Theme Toggle */}
+            <ThemeToggle />
 
             {/* Modern Cart */}
             <Link to="/cart" className="relative group">

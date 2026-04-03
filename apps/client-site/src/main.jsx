@@ -19,6 +19,8 @@ import Gallery from "./pages/Gallery";
 import ProductInquiry from "./pages/InquiryPage";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import { FeatureFlagProvider } from "./context/FeatureFlagContext";
 import ProductPage from "./pages/ProductPage";
 import NewsletterForm from "./pages/NewsletterForm";
 import BlogList from "./pages/BlogList";
@@ -122,57 +124,61 @@ registerServiceWorker();
 root.render(
   <StrictMode>
     <ErrorBoundary>
-      <AuthProvider>
-        <CartProvider>
-          <Router>
-            <OfflineIndicator />
-            <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/home" element={<Homepage />} />
-            <Route path="/shop" element={<ShopPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/login" element={<AuthPage />} />
-            <Route path="/signup" element={<AuthPage />} />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute showLoginPage={true}>
-                  <ProfileWrapper />
-                </ProtectedRoute>
-              }
-            />
-            {/* Public Route: Cart Page */}
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/services" element={<OurServicesPage />} />
-            <Route path="/interior-decor" element={<InteriorDecor />} />
-            <Route path="/inquiry" element={<ProductInquiry />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/test-product" element={<ProductPage />} />
-            <Route path="/newsletter" element={<NewsletterForm />} />
-            <Route path="/debug" element={<DebugAuth />} />
-            <Route path="/simple-auth" element={<SimpleAuth />} />
-            <Route path="/blog" element={<BlogList />} />
-            <Route path="/blog/:id" element={<BlogDetail />} />
-            <Route
-              path="/admin/users"
-              element={
-                <ProtectedRoute>
-                  <UserManagement />
-                </ProtectedRoute>
-              }
-            />
+      <FeatureFlagProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <CartProvider>
+              <Router>
+                <OfflineIndicator />
+                <Routes>
+                <Route path="/" element={<Homepage />} />
+                <Route path="/home" element={<Homepage />} />
+                <Route path="/shop" element={<ShopPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/login" element={<AuthPage />} />
+                <Route path="/signup" element={<AuthPage />} />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute showLoginPage={true}>
+                      <ProfileWrapper />
+                    </ProtectedRoute>
+                  }
+                />
+                {/* Public Route: Cart Page */}
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/services" element={<OurServicesPage />} />
+                <Route path="/interior-decor" element={<InteriorDecor />} />
+                <Route path="/inquiry" element={<ProductInquiry />} />
+                <Route path="/gallery" element={<Gallery />} />
+                <Route path="/test-product" element={<ProductPage />} />
+                <Route path="/newsletter" element={<NewsletterForm />} />
+                <Route path="/debug" element={<DebugAuth />} />
+                <Route path="/simple-auth" element={<SimpleAuth />} />
+                <Route path="/blog" element={<BlogList />} />
+                <Route path="/blog/:id" element={<BlogDetail />} />
+                <Route
+                  path="/admin/users"
+                  element={
+                    <ProtectedRoute>
+                      <UserManagement />
+                    </ProtectedRoute>
+                  }
+                />
 
-            <Route path="/products/:id" element={<ProductPage />} />
-            <Route
-              path="*"
-              element={
-                <div className="text-center py-16">404 - Page Not Found</div>
-              }
-            />
-          </Routes>
-        </Router>
-      </CartProvider>
-    </AuthProvider>
+                <Route path="/products/:id" element={<ProductPage />} />
+                <Route
+                  path="*"
+                  element={
+                    <div className="text-center py-16">404 - Page Not Found</div>
+                  }
+                />
+              </Routes>
+            </Router>
+          </CartProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </FeatureFlagProvider>
   </ErrorBoundary>
   </StrictMode>
 );

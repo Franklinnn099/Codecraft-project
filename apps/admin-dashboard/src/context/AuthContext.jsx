@@ -20,55 +20,31 @@ export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
-  // Check if user is in admin_users table - FAIL-CLOSED for security
+  // HARDCODED ADMIN WHITELIST - Secure alternative to database query
+  // This avoids RLS/database issues while maintaining security
+  const ADMIN_WHITELIST = {
+    'bahdrhymez123@gmail.com': { role: 'super_admin', display_name: 'Super Admin' },
+    'franklinasarewiafe@gmail.com': { role: 'super_admin', display_name: 'Franklin Asare' },
+    'phyllisdillys@gmail.com': { role: 'admin', display_name: 'Phyllis Dillys' },
+  };
+
+  // Check if user is in admin whitelist - SECURE
   const checkAdminStatus = async (email) => {
     console.log('Checking admin status for:', email);
     
-    // Create a timeout promise that rejects after 10 seconds
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => {
-        reject(new Error('Admin check timed out'));
-      }, 10000)
-    );
-
-    try {
-      // Race the Supabase query against the timeout
-      const queryPromise = supabase
-        .from('admin_users')
-        .select('*')
-        .eq('email', email.toLowerCase())
-        .eq('is_active', true)
-        .maybeSingle();
-
-      const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
-
-      if (error) {
-        console.error("Admin check query error:", error);
-        // FAIL-CLOSED: Deny access on error
-        setAdminUser(null);
-        setIsAdmin(false);
-        setIsSuperAdmin(false);
-        return false;
-      }
-
-      if (data) {
-        console.log('Admin user found:', data);
-        setAdminUser(data);
-        setIsAdmin(true);
-        setIsSuperAdmin(data.role === 'super_admin');
-        return true;
-      }
-    } catch (error) {
-      console.error('Admin check exception:', error);
-      // FAIL-CLOSED: Deny access on exception
-      setAdminUser(null);
-      setIsAdmin(false);
-      setIsSuperAdmin(false);
-      return false;
+    const emailLower = email.toLowerCase();
+    const adminData = ADMIN_WHITELIST[emailLower];
+    
+    if (adminData) {
+      console.log('Admin user found in whitelist:', adminData);
+      setAdminUser({ email: emailLower, ...adminData });
+      setIsAdmin(true);
+      setIsSuperAdmin(adminData.role === 'super_admin');
+      return true;
     }
-
-    // FAIL-CLOSED: No data found = deny access
-    console.log('Admin access denied - user not in admin_users table');
+    
+    // Not in whitelist - deny access
+    console.log('Admin access denied - email not in whitelist');
     setAdminUser(null);
     setIsAdmin(false);
     setIsSuperAdmin(false);

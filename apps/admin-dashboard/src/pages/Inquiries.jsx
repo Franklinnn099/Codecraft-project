@@ -57,7 +57,7 @@ Please feel free to contact us at your earliest convenience. We look forward to 
 Customer Service Team
 Expert Office Furnish Ltd.
 
-📧 Email: info@expertofficefurnish.com
+📧 Email: expertofurnish@gmail.com
 📱 Phone: +233 XX XXX XXXX
 🌐 Website: www.expertofficefurnish.com
 📍 Location: Accra, Ghana
@@ -191,7 +191,7 @@ Thank you once again for considering Expert Office Furnish for your office furni
 Customer Service Team
 Expert Office Furnish Ltd.
 
-📧 Email: info@expertofficefurnish.com
+📧 Email: expertofurnish@gmail.com
 📱 Phone: +233 XX XXX XXXX
 🌐 Website: www.expertofficefurnish.com
 📍 Location: Accra, Ghana
@@ -231,7 +231,7 @@ Follow us on social media for design inspiration and updates!`,
               customerName: selectedInquiry.name,
               companyInfo: {
                 name: "Expert Office Furnish Ltd.",
-                email: "info@expertofficefurnish.com",
+                email: "expertofurnish@gmail.com",
                 phone: "+233 XX XXX XXXX",
                 website: "www.expertofficefurnish.com",
                 location: "Accra, Ghana",
@@ -337,7 +337,7 @@ Please feel free to contact us at your earliest convenience.`,
 Customer Service Team
 Expert Office Furnish Ltd.
 
-📧 Email: info@expertofficefurnish.com
+📧 Email: expertofurnish@gmail.com
 📱 Phone: +233 XX XXX XXXX
 🌐 Website: www.expertofficefurnish.com
 📍 Location: Accra, Ghana
@@ -895,7 +895,7 @@ Your trusted partner for premium office furniture solutions.`,
                 </div>
                 <div className="flex items-center gap-2">
                   <Globe className="w-4 h-4 text-blue-600" />
-                  <span>info@expertofficefurnish.com</span>
+                  <span>expertofurnish@gmail.com</span>
                 </div>
               </div>
             </div>
@@ -1068,7 +1068,7 @@ Please feel free to contact us at your earliest convenience."
 [Your Title]
 Expert Office Furnish Ltd.
 
-📧 Email: info@expertofficefurnish.com
+📧 Email: expertofurnish@gmail.com
 📱 Phone: +233 XX XXX XXXX
 🌐 Website: www.expertofficefurnish.com
 📍 Location: Accra, Ghana
@@ -1124,7 +1124,7 @@ Follow us on social media for the latest updates and design inspiration!"
                       </div>
                       <div className="text-sm text-gray-600 mb-1">
                         <strong>From:</strong> Expert Office Furnish
-                        &lt;info@expertofficefurnish.com&gt;
+                        &lt;expertofurnish@gmail.com&gt;
                       </div>
                       <div className="text-sm text-gray-600">
                         <strong>Subject:</strong>{" "}

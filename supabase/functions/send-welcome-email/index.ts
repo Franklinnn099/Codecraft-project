@@ -38,7 +38,7 @@ serve(async (req) => {
         Authorization: `Bearer ${resendApiKey}`,
       },
       body: JSON.stringify({
-        from: "Expert Office Furnish <welcome@expertofficefurnish.com>",
+        from: "Expert Office Furnish <expertofurnish@gmail.com>",
         to: [email],
         subject: "🎉 Welcome to Expert Office Furnish! Your Workspace Journey Begins",
         html: htmlContent,

@@ -31,3 +31,10 @@ logo-base64.txt
 .vscode/
 *.swp
 *.swo
+
+# Documentation (generated, not version controlled)
+docs/
+
+# Markdown files (may contain company details)
+*.md
+**/README.md

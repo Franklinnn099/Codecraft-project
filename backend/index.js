@@ -92,6 +92,10 @@ app.use('/api/email', emailRateLimiter, emailRoutes);
 // Apply API key protection for all OTHER /api routes
 app.use('/api', requireApiKey());
 
+// Product routes (batch import uses multer for multipart, not JSON body parser)
+const productRoutes = require('./routes/products');
+app.use('/api/products', productRoutes);
+
 // Protected test route
 app.get('/api/test', (req, res) => {
   res.json({ message: '✅ API key valid, route protected!' });

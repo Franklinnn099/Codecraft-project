@@ -43,7 +43,7 @@ export default function ServiceInquiries() {
 Customer Service Team
 Expert Office Furnish Ltd.
 
-📧 Email: info@expertofficefurnish.com
+📧 Email: expertofurnish@gmail.com
 📱 Phone: +233 XX XXX XXXX
 🌐 Website: www.expertofficefurnish.com
 📍 Location: Accra, Ghana
@@ -198,7 +198,7 @@ Thank you once again for considering Expert Office Furnish for your ${serviceTyp
 Customer Service Team
 Expert Office Furnish Ltd.
 
-📧 Email: info@expertofficefurnish.com
+📧 Email: expertofurnish@gmail.com
 📱 Phone: +233 XX XXX XXXX
 🌐 Website: www.expertofficefurnish.com
 📍 Location: Accra, Ghana
@@ -267,7 +267,7 @@ Your trusted partner for premium office furniture solutions.`,
 Customer Service Team
 Expert Office Furnish Ltd.
 
-📧 Email: info@expertofficefurnish.com
+📧 Email: expertofurnish@gmail.com
 📱 Phone: +233 XX XXX XXXX
 🌐 Website: www.expertofficefurnish.com
 📍 Location: Accra, Ghana

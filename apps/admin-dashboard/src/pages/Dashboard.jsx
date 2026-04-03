@@ -225,8 +225,8 @@ export default function Dashboard() {
     ],
     datasets: [
       {
-        label: "Monthly Revenue (GH₵)",
-        data: monthlySales,
+        label: "Monthly Inquiries",
+        data: monthlySales.map(val => Math.round(val / 2500)), // Convert back to inquiry counts
         borderColor: "rgb(34, 197, 94)",
         backgroundColor: "rgba(34, 197, 94, 0.1)",
         fill: true,
@@ -383,8 +383,8 @@ export default function Dashboard() {
         {/* Monthly Sales Chart */}
         <div className="lg:col-span-2">
           <ChartCard
-            title="Revenue Overview"
-            subtitle="Monthly sales performance"
+            title="Inquiries Overview"
+            subtitle="Monthly inquiry volume"
             type="line"
             data={lineData}
             options={chartOptions}

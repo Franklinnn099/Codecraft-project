@@ -6,8 +6,8 @@
 require('dotenv').config();
 
 // Force set the credentials (override .env if needed)
-process.env.EMAIL_USER = 'franklinasarewiafe@gmail.com';
-process.env.EMAIL_PASS = 'soet wkiw ezbz tfkt';
+process.env.EMAIL_USER = 'expertofurnish@gmail.com';
+process.env.EMAIL_PASS = process.env.EMAIL_PASS || ''; // Set via environment variable
 
 const { sendWelcomeEmail, testEmailConfiguration } = require('./services/emailService');
 

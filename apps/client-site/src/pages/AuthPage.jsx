@@ -71,8 +71,8 @@ export default function AuthPage() {
         .single();
 
       setTimeout(() => {
-        if (adminData && adminData.role === "admin") {
-          window.location.href = "http://localhost:5000"; // Redirect to admin dashboard
+        if (adminData && (adminData.role === "admin" || adminData.role === "super_admin")) {
+          window.location.href = "https://expertofficefurnish.com/admin"; // Redirect to admin dashboard
         } else {
           navigate("/");
         }

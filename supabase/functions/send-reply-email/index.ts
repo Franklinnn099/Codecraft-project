@@ -128,7 +128,7 @@ serve(async (req) => {
             <div class="footer">
                 <p><strong>Expert Office Furnish Ltd.</strong></p>
                 <div class="contact-info">
-                    <span>📧 info@expertofficefurnish.com</span>
+                    <span>📧 expertofurnish@gmail.com</span>
                     <span>📱 +233 XX XXX XXXX</span>
                     <span>📍 Accra, Ghana</span>
                 </div>
@@ -152,12 +152,12 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Expert Office Furnish <noreply@expertofficefurnish.com>",
+        from: "Expert Office Furnish <expertofurnish@gmail.com>",
         to: [to],
         subject: subject,
         html: htmlContent,
         text: textContent,
-        reply_to: "info@expertofficefurnish.com",
+        reply_to: "expertofurnish@gmail.com",
       }),
     });
 

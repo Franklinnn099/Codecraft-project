@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import sharpOptimizer from "./vite-plugin-sharp.js";
 
 export default defineConfig({
+  base: '/admin/', // Required for deployment to /admin subdirectory
   plugins: [
     react(),
     sharpOptimizer({
@@ -17,3 +18,4 @@ export default defineConfig({
     host: true,
   },
 });
+

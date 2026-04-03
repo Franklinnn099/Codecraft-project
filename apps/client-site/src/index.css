@@ -3,10 +3,138 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global styles */
-body {
-  @apply bg-white text-gray-900 antialiased;
+/* ============================================
+   THEME SYSTEM - Light/Dark Mode Support
+   Site colors: Green (#22c55e) / Yellow (#eab308)
+   ============================================ */
+
+/* CSS Variables for theming */
+:root {
+  /* Light theme (default) */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+  --border-color: #e5e7eb;
+  --accent-green: #22c55e;
+  --accent-yellow: #eab308;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --glass-bg: rgba(255, 255, 255, 0.1);
 }
+
+.dark {
+  /* Dark theme */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --accent-green: #22c55e;
+  --accent-yellow: #eab308;
+  --card-bg: rgba(30, 41, 59, 0.8);
+  --glass-bg: rgba(0, 0, 0, 0.2);
+}
+
+/* Apply theme colors */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode overrides for common elements */
+.dark body {
+  @apply bg-slate-900 text-white;
+}
+
+.dark .bg-white {
+  background-color: var(--bg-secondary) !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: var(--bg-tertiary) !important;
+}
+
+.dark .text-gray-900 {
+  color: var(--text-primary) !important;
+}
+
+.dark .text-gray-700,
+.dark .text-gray-800 {
+  color: var(--text-secondary) !important;
+}
+
+.dark .text-gray-600,
+.dark .text-gray-500 {
+  color: var(--text-muted) !important;
+}
+
+.dark .border-gray-200,
+.dark .border-gray-100 {
+  border-color: var(--border-color) !important;
+}
+
+/* Dark mode cards and containers */
+.dark .bg-white\/80,
+.dark .bg-white\/95 {
+  background-color: rgba(30, 41, 59, 0.95) !important;
+}
+
+/* Header specific dark mode */
+.dark header.bg-white\/95 {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+}
+
+/* Form inputs dark mode */
+.dark input,
+.dark textarea,
+.dark select {
+  @apply bg-slate-800 border-slate-600 text-white placeholder-slate-400;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  @apply border-green-500 ring-green-500/20;
+}
+
+/* Card shadows for dark mode */
+.dark .shadow-lg,
+.dark .shadow-xl,
+.dark .shadow-2xl {
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Glass morphism dark mode */
+.dark .glass {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gradient text stays vibrant */
+.dark .gradient-text {
+  background: linear-gradient(135deg, #fbbf24, #22c55e, #16a34a, #eab308);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Scrollbar dark mode */
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #eab308, #22c55e);
+}
+
+/* ============================================ */
+
+/* Global styles (original) */
 
 /* Ensure pages have proper spacing from fixed header */
 main,
