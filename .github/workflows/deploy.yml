@@ -35,3 +35,14 @@ jobs:
           local-dir: apps/client-site/dist/
           # Deploy to Hostinger's standard public directory. Change if necessary.
           server-dir: public_html/
+
+      - name: FTP Deploy Backend to Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # This deploys the backend source code
+          local-dir: backend/
+          # Deploy to a dedicated backend folder adjacent to public_html
+          server-dir: backend/
