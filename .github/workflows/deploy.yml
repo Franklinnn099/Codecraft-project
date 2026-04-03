@@ -33,8 +33,8 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           # This deploys the built frontend files
           local-dir: apps/client-site/dist/
-          # Deploy to Hostinger's default ftp root
-          server-dir: ./
+          # Deploy to Hostinger's standard public directory. Change if necessary.
+          server-dir: public_html/
 
       - name: FTP Deploy Backend to Hostinger
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
