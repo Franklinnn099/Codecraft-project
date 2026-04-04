@@ -178,50 +178,40 @@ export default function Homepage() {
         // Add timeout protection for database queries
         const createTimeoutPromise = (name, timeoutMs = 10000) =>
           new Promise((_, reject) =>
-            setTimeout(() => reject(new Error(`${name} timeout after ${timeoutMs}ms`)), timeoutMs)
+            setTimeout(() => reject(new Error(`${name} timeout`)), timeoutMs)
           );
 
         // Fetch products and blogs in parallel with reasonable timeout
-        const fetchWithRetry = async (fetcher, name, retries = 1) => {
-          try {
-            const result = await Promise.race([
-              fetcher(),
-              createTimeoutPromise(name, 15000)
-            ]);
-            if (result.error && retries > 0) throw result.error;
-            return result;
-          } catch (err) {
-            if (retries > 0) {
-              console.warn(`Retrying ${name} fetch... (${retries} left)`);
-              await new Promise(r => setTimeout(r, 1000));
-              return fetchWithRetry(fetcher, name, retries - 1);
-            }
-            return { data: null, error: err };
-          }
-        };
-
         const [productsResult, blogsResult] = await Promise.all([
           cachedProducts
             ? Promise.resolve({ data: cachedProducts, error: null })
-            : fetchWithRetry(() => supabase
-                .from("products")
-                .select("id, name, image_url, category_id, description")
-                .eq("status", "active")
-                .limit(4), "Products"),
+            : Promise.race([
+                supabase
+                  .from("products")
+                  .select(
+                    "id, name, image_url, category_id, description"
+                  )
+                  .eq("status", "active")
+                  .limit(4),
+                createTimeoutPromise("Products", 15000), // Increased timeout to 15 seconds
+              ]).catch((error) => ({ data: null, error })),
           cachedBlogs
             ? Promise.resolve({ data: cachedBlogs, error: null })
-            : fetchWithRetry(() => supabase
-                .from("blog_posts")
-                .select("id, title, excerpt, created_at, image_url, tags")
-                .eq("status", "Published")
-                .order("created_at", { ascending: false })
-                .limit(3), "Blogs"),
+            : Promise.race([
+                supabase
+                  .from("blog_posts")
+                  .select("id, title, excerpt, created_at, image_url, tags")
+                  .eq("status", "Published")
+                  .order("created_at", { ascending: false })
+                  .limit(3),
+                createTimeoutPromise("Blogs", 15000), // Increased timeout to 15 seconds
+              ]).catch((error) => ({ data: null, error })),
         ]);
 
         // Handle products with better error recovery
         if (productsResult.error || !productsResult.data) {
           console.error(
-            "Failed to fetch products after retries:",
+            "Failed to fetch products:",
             productsResult.error || "No data"
           );
           // Set fallback products
