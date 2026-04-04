@@ -283,7 +283,7 @@ export default function Sidebar({ collapsed, onToggle }) {
 
       <aside
         className={`fixed top-4 left-4 bottom-4 rounded-[2rem] bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-all duration-500 ease-spring z-50 flex flex-col overflow-hidden
-          ${collapsed ? "-translate-x-[150%] lg:translate-x-0 lg:w-24" : "translate-x-0 w-72"}
+          ${collapsed ? "-translate-x-[150%] lg:translate-x-0 lg:w-24" : "translate-x-0 w-64"}
         `}
       >
       {/* Header */}
@@ -295,7 +295,7 @@ export default function Sidebar({ collapsed, onToggle }) {
         <div className="relative group cursor-pointer">
            <div className={`absolute -inset-2 bg-gradient-to-r from-green-500 to-yellow-500 rounded-full blur opacity-20 group-hover:opacity-40 transition duration-500 ${collapsed ? "w-14 h-14" : "w-14 h-14"}`}></div>
            <img
-            src="/pics/Company logo.png"
+            src="/admin/pics/Company logo.png"
             alt="Logo"
             className="relative h-12 w-12 object-cover rounded-2xl shadow-sm transition-transform duration-500 group-hover:rotate-6"
            />
@@ -326,7 +326,10 @@ export default function Sidebar({ collapsed, onToggle }) {
            {/* Visit Site Button - Creative Style */}
            {!collapsed ? (
                <button 
-                  onClick={() => window.location.href = "http://localhost:5001"}
+                  onClick={() => {
+                    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                    window.location.href = isLocal ? 'http://localhost:5002' : 'https://expertofficefurnish.com';
+                  }}
                   className="group relative w-full overflow-hidden p-3 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-bold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:-translate-y-1"
                >
                    <div className="flex items-center justify-center gap-2 relative z-10">
@@ -337,7 +340,10 @@ export default function Sidebar({ collapsed, onToggle }) {
                </button>
            ) : (
              <button 
-                onClick={() => window.location.href = "http://localhost:5001"}
+                onClick={() => {
+                  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                  window.location.href = isLocal ? 'http://localhost:5002' : 'https://expertofficefurnish.com';
+                }}
                 className="p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 hover:scale-110 transition-transform"
                 title="Visit Live Site"
              >

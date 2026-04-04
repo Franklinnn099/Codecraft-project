@@ -58,7 +58,7 @@ export default function AdminLayout({ children, toggleDarkMode, darkMode }) {
 
         <div
           className={`flex-1 transition-all duration-300 ${
-            sidebarCollapsed ? "lg:ml-20" : "lg:ml-64"
+            sidebarCollapsed ? "lg:ml-[120px]" : "lg:ml-[280px]"
           }`}
         >
           <Navbar

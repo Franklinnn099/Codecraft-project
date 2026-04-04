@@ -72,11 +72,12 @@ export default function AuthPage() {
 
       setTimeout(() => {
         if (adminData && (adminData.role === "admin" || adminData.role === "super_admin")) {
-          window.location.href = "https://expertofficefurnish.com/admin"; // Redirect to admin dashboard
+          window.location.href = "/admin"; // Redirect to admin dashboard
         } else {
           navigate("/");
         }
       }, 1500);
+
     } catch (error) {
       console.error('Caught error:', error);
       toast.error(error.message || "Login failed. Please check your credentials.", {
@@ -240,7 +241,8 @@ export default function AuthPage() {
       });
 
       // Send Welcome Email via Backend API (fire and forget)
-      fetch('http://localhost:5050/api/email/welcome', {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      fetch(`${apiUrl}/api/email/welcome`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: regEmail, name: regUsername }),

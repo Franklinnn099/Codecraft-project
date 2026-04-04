@@ -853,7 +853,7 @@ Your trusted partner for premium office furniture solutions.`,
                 <div className="flex items-center gap-4">
                   <div className="bg-white rounded-lg p-2 shadow-sm">
                     <img
-                      src="../../pics/Company logo.png"
+                      src="/admin/pics/Company logo.png"
                       alt="Expert Office Furnish"
                       className="h-10 w-auto"
                       onError={(e) => {
@@ -1096,7 +1096,7 @@ Follow us on social media for the latest updates and design inspiration!"
                     <div className="flex items-center gap-3">
                       <div className="bg-white rounded p-1">
                         <img
-                          src="../../pics/Company logo.png"
+                          src="/admin/pics/Company logo.png"
                           alt="Expert Office Furnish"
                           className="h-8 w-auto"
                           onError={(e) => {
